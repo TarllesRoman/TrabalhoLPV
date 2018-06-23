@@ -2,12 +2,12 @@ package br.com.academia.modelo;
 
 public class Ritmo {
 	private int id;
-	private int km;
-	private float tempo;
+	private double km,
+				   tempo;
 	
 	public Ritmo() {	}
 
-	public Ritmo(int id, int km, float tempo) {
+	public Ritmo(int id, double km, double tempo) {
 		super();
 		this.id = id;
 		this.km = km;
@@ -22,19 +22,19 @@ public class Ritmo {
 		this.id = id;
 	}
 
-	public int getKm() {
+	public double getKm() {
 		return km;
 	}
 
-	public void setKm(int km) {
+	public void setKm(double km) {
 		this.km = km;
 	}
 
-	public float getTempo() {
+	public double getTempo() {
 		return tempo;
 	}
 
-	public void setTempo(float tempo) {
+	public void setTempo(double tempo) {
 		this.tempo = tempo;
 	}
 	
