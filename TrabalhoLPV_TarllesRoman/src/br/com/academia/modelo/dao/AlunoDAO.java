@@ -69,4 +69,25 @@ public class AlunoDAO {
 		state.close();
 		return alunos;
 	}
+	
+	/**Retorna o aluno que possue esse email ou null*/
+	public static Aluno selecionar(Connection con, String email) throws SQLException {
+		String sql = "SELECT id, nome, sexo, email, cpf, whatsapp, altura, peso, \"dataNascimento\""
+					 + " FROM public.aluno WHERE email=?";
+		
+		PreparedStatement state = con.prepareStatement(sql);
+		
+		state.setString(1,email);
+		
+		Aluno aluno = null;
+		ResultSet result = state.executeQuery();
+		if(result.next())
+			 aluno = new Aluno(result.getInt(1), result.getString(2), result.getString(3),
+					 	result.getString(4), result.getString(5), result.getString(6),
+					 	result.getDouble(7), result.getDouble(8), result.getDate(9));
+		
+		
+		state.close();
+		return aluno;
+	}
 }//class AlunoDAO

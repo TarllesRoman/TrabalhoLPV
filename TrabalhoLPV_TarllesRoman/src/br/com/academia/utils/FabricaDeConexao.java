@@ -6,6 +6,6 @@ import java.sql.SQLException;
 
 public class FabricaDeConexao {
 	public static Connection fabricarConexao() throws SQLException {
-		return DriverManager.getConnection("jdbc:postgresql://localhost/","postgres","root");	
+		return DriverManager.getConnection("jdbc:postgresql://localhost/academia","postgres","root");	
 	}
 }

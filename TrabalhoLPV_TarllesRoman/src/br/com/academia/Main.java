@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import br.com.academia.utils.FabricaDeConexao;
+import br.com.academia.utils.FileImporter;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
@@ -49,6 +50,8 @@ public class Main extends Application {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		FileImporter.importarArquivo("C:\\Users\\tarll\\Desktop\\ArquivosTeste\\Exercicio1.txt");
 		
 		launch(args);
 	}
