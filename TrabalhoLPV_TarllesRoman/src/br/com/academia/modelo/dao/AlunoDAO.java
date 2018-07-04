@@ -11,7 +11,7 @@ import br.com.academia.modelo.Aluno;
 public class AlunoDAO {
 	public static void inserir(Aluno aluno, Connection con) throws SQLException{
 		String sql = "INSERT INTO public.aluno(nome, sexo, email, cpf, whatsapp,"
-					 +" altura, peso, \"dataNascimento\") VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+					 +" altura, peso, data_nascimento) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		PreparedStatement state = con.prepareStatement(sql);
 		
@@ -30,7 +30,7 @@ public class AlunoDAO {
 	
 	/**Retorna o aluno que possui esse id ou null*/
 	public static Aluno selecionar(int id, Connection con) throws SQLException {
-		String sql = "SELECT id, nome, sexo, email, cpf, whatsapp, altura, peso, \"dataNascimento\""
+		String sql = "SELECT id, nome, sexo, email, cpf, whatsapp, altura, peso, data_nascimento"
 					 + " FROM public.aluno WHERE id=?";
 		
 		PreparedStatement state = con.prepareStatement(sql);
@@ -51,7 +51,7 @@ public class AlunoDAO {
 	
 	/**Retorna os alunos que possuem esse nome*/
 	public static ArrayList<Aluno> selecionar(String nome, Connection con) throws SQLException {
-		String sql = "SELECT id, nome, sexo, email, cpf, whatsapp, altura, peso, \"dataNascimento\""
+		String sql = "SELECT id, nome, sexo, email, cpf, whatsapp, altura, peso, data_nascimento"
 					 + " FROM public.aluno WHERE nome=?";
 		
 		PreparedStatement state = con.prepareStatement(sql);
@@ -70,9 +70,27 @@ public class AlunoDAO {
 		return alunos;
 	}
 	
+	/**Retorna todos os alunos*/
+	public static ArrayList<Aluno> selecionar(Connection con) throws SQLException {
+		String sql = "SELECT id, nome, sexo, email, cpf, whatsapp, altura, peso, data_nascimento"
+					 + " FROM public.aluno";
+		
+		PreparedStatement state = con.prepareStatement(sql);
+		
+		ArrayList<Aluno> alunos = new ArrayList<>();
+		ResultSet result = state.executeQuery();
+		while(result.next())
+			 alunos.add( new Aluno(result.getInt(1), result.getString(2), result.getString(3),
+					 	result.getString(4), result.getString(5), result.getString(6),
+					 	result.getDouble(7), result.getDouble(8), result.getDate(9)) );
+		
+		state.close();
+		return alunos;
+	}
+	
 	/**Retorna o aluno que possue esse email ou null*/
 	public static Aluno selecionar(Connection con, String email) throws SQLException {
-		String sql = "SELECT id, nome, sexo, email, cpf, whatsapp, altura, peso, \"dataNascimento\""
+		String sql = "SELECT id, nome, sexo, email, cpf, whatsapp, altura, peso, data_nascimento"
 					 + " FROM public.aluno WHERE email=?";
 		
 		PreparedStatement state = con.prepareStatement(sql);

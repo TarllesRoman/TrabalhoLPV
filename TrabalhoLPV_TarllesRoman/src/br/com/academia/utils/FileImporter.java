@@ -75,8 +75,8 @@ public class FileImporter {
 			atividade = AtividadeDAO.selecionar(alunoImporatado, atividade.getData(),
 					atividade.getTempo(), Main.conexao);
 			
-			AtividadeCompleta atividadeCompleta = new AtividadeCompleta(atividade);
 			
+			AtividadeCompleta atividadeCompleta = new AtividadeCompleta(atividade);
 			boolean isCompleta = false;
 			
 			try {
@@ -120,7 +120,7 @@ public class FileImporter {
 			}catch(RuntimeException e) {	}
 			
 			if(isCompleta) {
-				AtividadeCompletaDAO.inserir(atividadeCompleta, Main.conexao);
+				AtividadeCompletaDAO.inserirApenas(atividadeCompleta, Main.conexao);
 				atividade = atividadeCompleta;
 			}
 			
@@ -154,6 +154,8 @@ public class FileImporter {
 	private static Aluno importarAluno(String conteudoArquivo) {
 		Aluno aluno;
 		String aux;
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 		try {
 			aux = obterRegex(SettingsKeys.REGEX_EMAIL.getValue(), conteudoArquivo);
@@ -164,6 +166,9 @@ public class FileImporter {
 				return aluno; //Se o aluno já estiver no bd o retorna
 			else
 				aluno = new Aluno();
+			
+			aux = obterRegex(SettingsKeys.REGEX_DATA_NASCIMENTO.getValue(), conteudoArquivo);
+			aluno.setDataNascimento( new Date(sdf.parse(aux.split(" ")[3]).getTime() ) );
 
 			aux = obterRegex(SettingsKeys.REGEX_NAME_ALUNO.getValue(), conteudoArquivo);
 			aluno.setNome(aux.substring(aux.indexOf(" ") + 1));
@@ -187,8 +192,7 @@ public class FileImporter {
 
 			return AlunoDAO.selecionar(Main.conexao, email);
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException | ParseException e) {
 			return null;
 		}
 	}

@@ -6,9 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
+import br.com.academia.Main;
 import br.com.academia.modelo.Aluno;
 import br.com.academia.modelo.Atividade;
+import br.com.academia.modelo.AtividadeCompleta;
 
 public class AtividadeDAO {
 	public static void inserir(Atividade atividade, Connection con) throws SQLException{
@@ -48,6 +51,17 @@ public class AtividadeDAO {
 					 		 result.getDouble(7), result.getInt(8)));
 		
 		state.close();
+		
+		int i = 0;
+		AtividadeCompleta atvAux;
+		for(Atividade atv : atividades) {
+			atvAux = AtividadeCompletaDAO.selecionar(atv, con);
+			if(atvAux != null) {
+				atividades.set(i, atvAux);
+			}
+			i++;
+		}
+		
 		return atividades;
 	}
 	
@@ -73,5 +87,71 @@ public class AtividadeDAO {
 		return atividade;
 	}
 	
+	/**Recupera todas as atividades no intervalo estipulado*/
+	public static List<Atividade> selecionar(Date dataInicio, Date dataFim, Connection con) throws SQLException{
+		String sql = "SELECT id, id_aluno, data, tempo, atividade, duracao, distancia, calorias, passos"
+					 + " FROM public.atividade WHERE data BETWEEN ? AND ?";
+		
+		PreparedStatement state = con.prepareStatement(sql);
+		
+		state.setDate(1, dataInicio);
+		state.setDate(2, dataFim);
+		
+		List<Atividade> atividades = new ArrayList<>();
+		ResultSet result = state.executeQuery();
+		while(result.next())
+			 atividades.add( new Atividade(result.getInt(1), AlunoDAO.selecionar(result.getInt(2), Main.conexao),
+					 		 result.getDate(3),result.getString(4),
+					 		 result.getString(5), result.getDouble(6),result.getDouble(7),
+					 		 result.getDouble(8), result.getInt(9)) );
+		
+		state.close();
+		
+		int i = 0;
+		AtividadeCompleta atvAux;
+		for(Atividade atv : atividades) {
+			atvAux = AtividadeCompletaDAO.selecionar(atv, con);
+			if(atvAux != null) {
+				atividades.set(i, atvAux);
+			}
+			i++;
+		}
+		
+		return atividades;
+	}
+	
+	/**Recupera todas as atividades no intervalo estipulado*/
+	public static List<Atividade> selecionar(Aluno aluno, Date dataInicio, Date dataFim, Connection con) throws SQLException{
+		String sql = "SELECT id, id_aluno, data, tempo, atividade, duracao, distancia, calorias, passos"
+					 + " FROM public.atividade WHERE id_aluno=? AND data BETWEEN ? AND ?";
+		
+		PreparedStatement state = con.prepareStatement(sql);
+		
+		state.setInt(1, aluno.getId());
+		state.setDate(2, dataInicio);
+		state.setDate(3, dataFim);
+		
+		List<Atividade> atividades = new ArrayList<>();
+		ResultSet result = state.executeQuery();
+		while(result.next())
+			 atividades.add( new Atividade(result.getInt(1), AlunoDAO.selecionar(result.getInt(2), Main.conexao),
+					 		 result.getDate(3),result.getString(4),
+					 		 result.getString(5), result.getDouble(6),result.getDouble(7),
+					 		 result.getDouble(8), result.getInt(9)) );
+		
+		state.close();
+		
+		int i = 0;
+		AtividadeCompleta atvAux;
+		for(Atividade atv : atividades) {
+			atvAux = AtividadeCompletaDAO.selecionar(atv, con);
+			if(atvAux != null) {
+				atividades.set(i, atvAux);
+			}
+			i++;
+		}
+		
+		return atividades;
+	}
 	
 }//class AtividadeDAO

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import br.com.academia.modelo.Atividade;
 import br.com.academia.modelo.AtividadeCompleta;
 
 public class AtividadeCompletaDAO {
@@ -36,11 +37,11 @@ public class AtividadeCompletaDAO {
 	}
 
 	
-	/**Busca e carrega a parte completa para essa atividade,
-	 *  se não houver não modifica os valores atuais.
-	 *  Também busca e carrega os ritmos referentes
+	/**Busca a parte completa para essa atividade,
+	 *  se não houver retorna null
+	 *  Também busca e carrega, na atividade retornada, os ritmos referentes
 	 * @throws SQLException */
-	public static void selecionar(AtividadeCompleta atividade, Connection con) throws SQLException {
+	public static AtividadeCompleta selecionar(Atividade atividade, Connection con) throws SQLException {
 		String sql = "SELECT id, velocidade_media, velocidade_maxima, ritmo_medio,"
 					 + " ritmo_maximo, menor_elevacao, maior_elevacao"
 				     + " FROM public.atividade_completa WHERE id_atividade=?";
@@ -50,19 +51,26 @@ public class AtividadeCompletaDAO {
 		state.setInt(1,atividade.getId());
 		
 		ResultSet result = state.executeQuery();
+		
+		AtividadeCompleta atvCompleta = new AtividadeCompleta(atividade);
+		
 		if(result.next()) {
-			atividade.setIdCompleta(result.getInt(1));
-			atividade.setVelocidadeMedia(result.getDouble(2));
-			atividade.setVelocidadeMaxima(result.getDouble(3));
-			atividade.setRitmoMedio(result.getDouble(4));
-			atividade.setRitmoMaximo(result.getDouble(5));
-			atividade.setMenorElevacao(result.getDouble(6));
-			atividade.setMaiorElevacao(result.getDouble(7));
+			atvCompleta.setIdCompleta(result.getInt(1));
+			atvCompleta.setVelocidadeMedia(result.getDouble(2));
+			atvCompleta.setVelocidadeMaxima(result.getDouble(3));
+			atvCompleta.setRitmoMedio(result.getDouble(4));
+			atvCompleta.setRitmoMaximo(result.getDouble(5));
+			atvCompleta.setMenorElevacao(result.getDouble(6));
+			atvCompleta.setMaiorElevacao(result.getDouble(7));
 			
-			RitmoDAO.selecionar(atividade, con);
+			RitmoDAO.selecionar(atvCompleta, con);
+			
+			state.close();
+			return atvCompleta;
 		}
 		
 		state.close();
+		return null;
 	}
 	
 }//class AtividadeCompletaDAO

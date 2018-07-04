@@ -10,7 +10,6 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -25,9 +24,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Arquivo">
             <items>
-              <MenuItem fx:id="miImportarEF" mnemonicParsing="false" text="Importar Exercício F." />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="miExportarPDF" mnemonicParsing="false" text="Exportar PDF" />
+              <MenuItem fx:id="miImportarEF" mnemonicParsing="false" onAction="#acaoImportar" text="Importar Exercício F." />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Configurações">
@@ -119,7 +116,7 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Button>
-      <Pane fx:id="paneGrafico" layoutX="391.0" layoutY="149.0" prefHeight="408.0" prefWidth="611.0" AnchorPane.bottomAnchor="73.0" AnchorPane.leftAnchor="391.0" AnchorPane.rightAnchor="4.0" />
+      <Pane fx:id="paneGrafico" layoutX="391.0" layoutY="181.0" prefHeight="408.0" prefWidth="611.0" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="391.0" AnchorPane.rightAnchor="4.0" />
       <Label alignment="CENTER" layoutX="391.0" layoutY="26.0" prefHeight="3.0" prefWidth="605.0" text="Gráficos" AnchorPane.leftAnchor="391.0" AnchorPane.rightAnchor="4.0">
          <font>
             <Font name="Verdana Bold" size="15.0" />
@@ -259,74 +256,10 @@
             <Font name="Verdana Bold Italic" size="9.0" />
          </font>
       </Label>
-      <Pane layoutX="531.0" layoutY="577.0" prefHeight="50.0" prefWidth="400.0" style="-fx-border-color: #cfcfcf; -fx-border-radius: 3px;">
-         <children>
-            <Label alignment="CENTER" layoutX="288.0" layoutY="4.0" prefHeight="15.0" prefWidth="121.0" text="Passos">
-               <font>
-                  <Font name="Verdana Bold" size="10.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER_RIGHT" layoutX="3.0" layoutY="31.0" prefHeight="15.0" prefWidth="49.0" text="Total:">
-               <font>
-                  <Font name="Verdana Bold" size="10.0" />
-               </font>
-            </Label>
-            <Label layoutX="16.0" layoutY="16.0" prefHeight="15.0" text="Média:">
-               <font>
-                  <Font name="Verdana Bold" size="10.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" layoutX="43.0" layoutY="4.0" prefHeight="15.0" prefWidth="121.0" text="Distância">
-               <font>
-                  <Font name="Verdana Bold" size="10.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" layoutX="167.0" layoutY="4.0" prefHeight="15.0" prefWidth="121.0" text="Calorias perdidas">
-               <font>
-                  <Font name="Verdana Bold" size="10.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblPassTotal" alignment="CENTER" layoutX="288.0" layoutY="32.0" prefHeight="15.0" prefWidth="121.0" text="11000">
-               <font>
-                  <Font name="Times New Roman" size="11.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblDistMedia" alignment="CENTER" layoutX="43.0" layoutY="17.0" prefHeight="15.0" prefWidth="121.0" text="10 Km">
-               <font>
-                  <Font name="Times New Roman" size="11.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblDistTotal" alignment="CENTER" layoutX="43.0" layoutY="31.0" prefHeight="15.0" prefWidth="121.0" text="8000 Km">
-               <font>
-                  <Font name="Times New Roman" size="11.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblCalMedia" alignment="CENTER" layoutX="167.0" layoutY="17.0" prefHeight="15.0" prefWidth="121.0" text="500 Kcal">
-               <font>
-                  <Font name="Times New Roman" size="11.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblCalTotal" alignment="CENTER" layoutX="167.0" layoutY="31.0" prefHeight="15.0" prefWidth="121.0" text="9000 Kcal">
-               <font>
-                  <Font name="Times New Roman" size="11.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblPassMedia" alignment="CENTER" layoutX="288.0" layoutY="17.0" prefHeight="15.0" prefWidth="121.0" text="11000">
-               <font>
-                  <Font name="Times New Roman" size="11.0" />
-               </font>
-            </Label>
-            <Label layoutX="13.0" layoutY="-5.0" style="-fx-background-color: white;" text="Estatísticas do gráfico">
-               <font>
-                  <Font name="Verdana Bold Italic" size="9.0" />
-               </font>
-            </Label>
-         </children>
-      </Pane>
       <HBox alignment="CENTER" layoutX="3.0" layoutY="49.0" prefHeight="50.0" prefWidth="381.0" style="-fx-border-color: #cfcfcf; -fx-border-radius: 3px;">
          <children>
             <TextField fx:id="tfCliente" prefHeight="25.0" prefWidth="297.0" />
-            <Button fx:id="btnBuscar" mnemonicParsing="false" prefHeight="25.0" prefWidth="73.0" text="Carregar">
+            <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#onactCarregar" prefHeight="25.0" prefWidth="73.0" text="Carregar">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>

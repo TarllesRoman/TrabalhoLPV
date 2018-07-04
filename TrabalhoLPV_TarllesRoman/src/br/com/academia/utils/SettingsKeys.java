@@ -17,7 +17,7 @@ public enum SettingsKeys {
 	REGEX_SEXO("Sexo: ([mM]asculino|[fF]eminino)"),
 	REGEX_ALTURA("Altura: ([0-9]+),([0-9]+) m"),
 	REGEX_PESO("Peso: ([0-9]+),([0-9]+) Kg"),
-	REGEX_DATA_NASCIMENTO(" Data de nascimento: [0-9]{2}/[0-9]{2}/[0-9]{4}"),
+	REGEX_DATA_NASCIMENTO("Data de nascimento: [0-9]{2}/[0-9]{2}/[0-9]{4}"),
 	REGEX_EMAIL("E-mail: (([a-zA-Z]|\\.|-|_)+)@([a-zA-Z]+)\\.([a-z]+)"),
 	REGEX_DATA_ATIVIDADE("Data: [0-9]{2}/[0-9]{2}/[0-9]{4}"),
 	REGEX_TEMPO_ATIVIDADE("Tempo: [0-9]{2}:[0-9]{2} - [0-9]{2}:[0-9]{2}"),
