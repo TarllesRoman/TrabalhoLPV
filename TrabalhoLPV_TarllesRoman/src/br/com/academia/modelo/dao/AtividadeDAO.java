@@ -1,6 +1,7 @@
 package br.com.academia.modelo.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,4 +50,28 @@ public class AtividadeDAO {
 		state.close();
 		return atividades;
 	}
+	
+	/**Recupera todas as atividades desse aluno*/
+	public static Atividade selecionar(Aluno aluno,Date data,String tempo, Connection con) throws SQLException{
+		String sql = "SELECT id, data, tempo, atividade, duracao, distancia, calorias, passos"
+					 + " FROM public.atividade WHERE id_aluno=? AND data=? AND tempo=?";
+		
+		PreparedStatement state = con.prepareStatement(sql);
+		
+		state.setInt(1,aluno.getId());
+		state.setDate(2, data);
+		state.setString(3, tempo);
+		
+		Atividade atividade = null;
+		ResultSet result = state.executeQuery();
+		if(result.next())
+			 atividade = new Atividade(result.getInt(1), aluno, result.getDate(2),result.getString(3),
+					 		 result.getString(4), result.getDouble(5),result.getDouble(6),
+					 		 result.getDouble(7), result.getInt(8));
+		
+		state.close();
+		return atividade;
+	}
+	
+	
 }//class AtividadeDAO

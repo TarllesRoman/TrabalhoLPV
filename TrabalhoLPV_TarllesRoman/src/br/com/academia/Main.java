@@ -22,7 +22,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/MainPanel.fxml"));
-			Scene scene = new Scene(root,400,400);
+			Scene scene = new Scene(root,1074,630);
 			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/MainPanel.css").toExternalForm());
 			
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -37,6 +37,7 @@ public class Main extends Application {
 				}
 			});
 			
+			primaryStage.setResizable(false);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
@@ -51,7 +52,7 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 		
-		FileImporter.importarArquivo("C:\\Users\\tarll\\Desktop\\ArquivosTeste\\Exercicio1.txt");
+		FileImporter.importarArquivo("C:\\Users\\tarll\\Desktop\\ArquivosTeste\\Exercicio1.new");
 		
 		launch(args);
 	}

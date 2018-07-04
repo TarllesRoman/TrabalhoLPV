@@ -1,7 +1,350 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
-	
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.academia.controle.MainPanelController">
-	<!-- TODO Add Nodes -->
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="1074.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.academia.controle.MainPanelController">
+   <children>
+      <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Arquivo">
+            <items>
+              <MenuItem fx:id="miImportarEF" mnemonicParsing="false" text="Importar Exercício F." />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="miExportarPDF" mnemonicParsing="false" text="Exportar PDF" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Configurações">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Preferências" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Ajuda">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Guia Rápido" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <Separator layoutX="387.0" layoutY="25.0" orientation="VERTICAL" prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="387.0" AnchorPane.topAnchor="25.0" />
+      <Separator layoutY="374.0" prefHeight="0.0" prefWidth="388.0" AnchorPane.leftAnchor="0.0" />
+      <Label layoutX="13.0" layoutY="120.0" text="Nome:">
+         <font>
+            <Font name="Verdana Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="13.0" layoutY="156.0" text="Sexo:">
+         <font>
+            <Font name="Verdana Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="13.0" layoutY="193.0" text="Peso:">
+         <font>
+            <Font name="Verdana Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="11.0" layoutY="235.0" text="Altura:">
+         <font>
+            <Font name="Verdana Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="11.0" layoutY="275.0" text="Data de Nascimento:">
+         <font>
+            <Font name="Verdana Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="10.0" layoutY="310.0" text="E-mail:">
+         <font>
+            <Font name="Verdana Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblNome" layoutX="68.0" layoutY="117.0" prefHeight="21.0" prefWidth="315.0" text="Nome Exemplo">
+         <font>
+            <Font name="Times New Roman" size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblSexo" layoutX="61.0" layoutY="156.0" text="sexexemple">
+         <font>
+            <Font name="Times New Roman" size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblPeso" layoutX="59.0" layoutY="193.0" text="71,98 kg">
+         <font>
+            <Font name="Times New Roman" size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblAltura" layoutX="64.0" layoutY="235.0" text="1,72 m">
+         <font>
+            <Font name="Times New Roman" size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblDataN" layoutX="160.0" layoutY="275.0" text="04/04/1997">
+         <font>
+            <Font name="Times New Roman" size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblEmail" layoutX="66.0" layoutY="307.0" prefHeight="21.0" prefWidth="315.0" text="email.exemplo@exemplo.com.br">
+         <font>
+            <Font name="Times New Roman" size="13.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutY="375.0" prefHeight="19.0" prefWidth="388.0" text="Exercícios Físicos">
+         <font>
+            <Font name="Verdana Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblNaoEncontrado" alignment="CENTER" layoutX="3.0" layoutY="99.0" prefHeight="21.0" prefWidth="381.0" text="Cliente não encontrado" textFill="#fc0505" visible="false">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnRelatorio" layoutX="229.0" layoutY="590.0" mnemonicParsing="false" text="Relatório de Exercícios">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Pane fx:id="paneGrafico" layoutX="391.0" layoutY="149.0" prefHeight="408.0" prefWidth="611.0" AnchorPane.bottomAnchor="73.0" AnchorPane.leftAnchor="391.0" AnchorPane.rightAnchor="4.0" />
+      <Label alignment="CENTER" layoutX="391.0" layoutY="26.0" prefHeight="3.0" prefWidth="605.0" text="Gráficos" AnchorPane.leftAnchor="391.0" AnchorPane.rightAnchor="4.0">
+         <font>
+            <Font name="Verdana Bold" size="15.0" />
+         </font>
+      </Label>
+      <HBox alignment="CENTER" layoutX="441.0" layoutY="50.0" prefHeight="50.0" prefWidth="400.0" style="-fx-border-color: #cfcfcf; -fx-border-radius: 3px;">
+         <children>
+            <VBox alignment="CENTER_LEFT" prefHeight="61.0" prefWidth="221.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="20.0" prefWidth="200.0" text="de">
+                     <font>
+                        <Font name="Verdana Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <DatePicker fx:id="dtpDe" editable="false" prefHeight="25.0" prefWidth="200.0" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_RIGHT" prefHeight="61.0" prefWidth="196.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="20.0" prefWidth="200.0" text="até">
+                     <font>
+                        <Font name="Verdana Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <DatePicker fx:id="dtpAte" editable="false" prefHeight="25.0" prefWidth="200.0" />
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+         </padding>
+      </HBox>
+      <Label layoutX="452.0" layoutY="45.0" style="-fx-background-color: white;" text="Intervalo">
+         <font>
+            <Font name="Verdana Bold Italic" size="9.0" />
+         </font>
+      </Label>
+      <HBox alignment="CENTER" layoutX="851.0" layoutY="50.0" prefHeight="50.0" prefWidth="170.0" style="-fx-border-color: #cfcfcf; -fx-border-radius: 3px;">
+         <padding>
+            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+         </padding>
+         <children>
+            <RadioButton mnemonicParsing="false" prefHeight="16.0" prefWidth="90.0" selected="true" text="Colunas">
+               <font>
+                  <Font name="Verdana Bold" size="12.0" />
+               </font>
+               <toggleGroup>
+                  <ToggleGroup fx:id="tgTiposGraficos" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton mnemonicParsing="false" prefHeight="16.0" prefWidth="64.0" text="Linha" toggleGroup="$tgTiposGraficos">
+               <font>
+                  <Font name="Verdana Bold" size="12.0" />
+               </font>
+            </RadioButton>
+         </children>
+      </HBox>
+      <Label layoutX="862.0" layoutY="45.0" style="-fx-background-color: white;" text="Modelos">
+         <font>
+            <Font name="Verdana Bold Italic" size="9.0" />
+         </font>
+      </Label>
+      <HBox alignment="BOTTOM_CENTER" layoutX="456.0" layoutY="108.0" prefHeight="38.0" prefWidth="550.0" style="-fx-border-color: #cfcfcf; -fx-border-radius: 3px;">
+         <padding>
+            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+         </padding>
+         <children>
+            <ComboBox fx:id="cbGraficos" prefHeight="25.0" prefWidth="275.0" promptText="Selecione o tipo de gráfico">
+               <HBox.margin>
+                  <Insets right="2.0" />
+               </HBox.margin>
+            </ComboBox>
+            <ComboBox fx:id="cbExercicios" prefHeight="25.0" prefWidth="275.0" promptText="Selecione o tipo de exercicio" />
+         </children>
+      </HBox>
+      <Label layoutX="467.0" layoutY="103.0" style="-fx-background-color: white;" text="Tipos">
+         <font>
+            <Font name="Verdana Bold Italic" size="9.0" />
+         </font>
+      </Label>
+      <Pane layoutX="15.0" layoutY="410.0" prefHeight="168.0" prefWidth="358.0" style="-fx-border-color: #cfcfcf; -fx-border-radius: 3px;">
+         <children>
+            <Label layoutX="9.0" layoutY="14.0" text="Maior duração:">
+               <font>
+                  <Font name="Verdana Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="9.0" layoutY="43.0" text="Maior distância:">
+               <font>
+                  <Font name="Verdana Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="9.0" layoutY="71.0" text="Máximo de calorias perdidas:">
+               <font>
+                  <Font name="Verdana Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="9.0" layoutY="100.0" text="Maior numero de passos:">
+               <font>
+                  <Font name="Verdana Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="9.0" layoutY="132.0" text="Maior velocidade:">
+               <font>
+                  <Font name="Verdana Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblMaiorDur" layoutX="119.0" layoutY="14.0" prefHeight="17.0" prefWidth="234.0" text="01:05:35 - 20/04/2018">
+               <font>
+                  <Font name="Times New Roman" size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblMaiorDist" layoutX="126.0" layoutY="42.0" prefHeight="17.0" prefWidth="234.0" text="13 Km - 20/04/2018">
+               <font>
+                  <Font name="Times New Roman" size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblMaxCal" layoutX="215.0" layoutY="68.0" prefHeight="21.0" prefWidth="141.0" text="1545 Kcal - 20/04/2018">
+               <font>
+                  <Font name="Times New Roman" size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblMaiorPassos" layoutX="187.0" layoutY="99.0" prefHeight="17.0" prefWidth="169.0" text="839 - 20/04/2018">
+               <font>
+                  <Font name="Times New Roman" size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblMaiorVel" layoutX="137.0" layoutY="131.0" prefHeight="17.0" prefWidth="234.0" text="8 Km/h - 20/04/2018">
+               <font>
+                  <Font name="Times New Roman" size="13.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Label layoutX="26.0" layoutY="405.0" style="-fx-background-color: white;" text="Entre todos os exercícios a:">
+         <font>
+            <Font name="Verdana Bold Italic" size="9.0" />
+         </font>
+      </Label>
+      <Pane layoutX="531.0" layoutY="577.0" prefHeight="50.0" prefWidth="400.0" style="-fx-border-color: #cfcfcf; -fx-border-radius: 3px;">
+         <children>
+            <Label alignment="CENTER" layoutX="288.0" layoutY="4.0" prefHeight="15.0" prefWidth="121.0" text="Passos">
+               <font>
+                  <Font name="Verdana Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER_RIGHT" layoutX="3.0" layoutY="31.0" prefHeight="15.0" prefWidth="49.0" text="Total:">
+               <font>
+                  <Font name="Verdana Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label layoutX="16.0" layoutY="16.0" prefHeight="15.0" text="Média:">
+               <font>
+                  <Font name="Verdana Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="43.0" layoutY="4.0" prefHeight="15.0" prefWidth="121.0" text="Distância">
+               <font>
+                  <Font name="Verdana Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="167.0" layoutY="4.0" prefHeight="15.0" prefWidth="121.0" text="Calorias perdidas">
+               <font>
+                  <Font name="Verdana Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblPassTotal" alignment="CENTER" layoutX="288.0" layoutY="32.0" prefHeight="15.0" prefWidth="121.0" text="11000">
+               <font>
+                  <Font name="Times New Roman" size="11.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblDistMedia" alignment="CENTER" layoutX="43.0" layoutY="17.0" prefHeight="15.0" prefWidth="121.0" text="10 Km">
+               <font>
+                  <Font name="Times New Roman" size="11.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblDistTotal" alignment="CENTER" layoutX="43.0" layoutY="31.0" prefHeight="15.0" prefWidth="121.0" text="8000 Km">
+               <font>
+                  <Font name="Times New Roman" size="11.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblCalMedia" alignment="CENTER" layoutX="167.0" layoutY="17.0" prefHeight="15.0" prefWidth="121.0" text="500 Kcal">
+               <font>
+                  <Font name="Times New Roman" size="11.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblCalTotal" alignment="CENTER" layoutX="167.0" layoutY="31.0" prefHeight="15.0" prefWidth="121.0" text="9000 Kcal">
+               <font>
+                  <Font name="Times New Roman" size="11.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblPassMedia" alignment="CENTER" layoutX="288.0" layoutY="17.0" prefHeight="15.0" prefWidth="121.0" text="11000">
+               <font>
+                  <Font name="Times New Roman" size="11.0" />
+               </font>
+            </Label>
+            <Label layoutX="13.0" layoutY="-5.0" style="-fx-background-color: white;" text="Estatísticas do gráfico">
+               <font>
+                  <Font name="Verdana Bold Italic" size="9.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <HBox alignment="CENTER" layoutX="3.0" layoutY="49.0" prefHeight="50.0" prefWidth="381.0" style="-fx-border-color: #cfcfcf; -fx-border-radius: 3px;">
+         <children>
+            <TextField fx:id="tfCliente" prefHeight="25.0" prefWidth="297.0" />
+            <Button fx:id="btnBuscar" mnemonicParsing="false" prefHeight="25.0" prefWidth="73.0" text="Carregar">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
+      <Label alignment="CENTER" layoutX="-2.0" layoutY="25.0" prefHeight="15.0" prefWidth="388.0" text="Cliente">
+         <font>
+            <Font name="Verdana Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="15.0" layoutY="44.0" style="-fx-background-color: white;" text="Buscar">
+         <font>
+            <Font name="Verdana Bold Italic" size="9.0" />
+         </font>
+      </Label>
+   </children>
 </AnchorPane>

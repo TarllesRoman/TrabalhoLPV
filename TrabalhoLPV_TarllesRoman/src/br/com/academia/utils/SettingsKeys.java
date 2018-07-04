@@ -12,7 +12,7 @@ public enum SettingsKeys {
 	/**Caracteres que separam valores dentro de uma mesma chave*/
 	SEPARATOR_VALUES(" ; "),
 	
-	REGEX_NAME_EXERCICIO("Exercício: ([^\\n])+)"),
+	REGEX_NAME_EXERCICIO("Exercício: ([^\\n]+)"),
 	REGEX_NAME_ALUNO("Nome: ([a-zA-Z]| )+"),
 	REGEX_SEXO("Sexo: ([mM]asculino|[fF]eminino)"),
 	REGEX_ALTURA("Altura: ([0-9]+),([0-9]+) m"),
@@ -24,7 +24,14 @@ public enum SettingsKeys {
 	REGEX_DURACAO("Duração: [0-9]{2}:[0-9]{2}:[0-9]{2}"),
 	REGEX_DISTANCIA("Distância: ([0-9|\\.]+),([0-9]+) Km"),
 	REGEX_CALORIAS_PERDIDAS("Calorias perdidas: ([0-9|\\.]+) Kcal"),
-	REGEX_PASSOS("Passos: ([0-9]|\\.)+");
+	REGEX_PASSOS("Passos: ([0-9]|\\.)+"),
+	REGEX_VELOCIDADE_MEDIA("Velocidade média: [0-9]+,[0-9]+"),
+	REGEX_VELOCIDADE_MAXIMA("Velocidade máxima: [0-9]+,[0-9]+"),
+	REGEX_MENOR_ELEVACAO("Menor elevação: ([0-9]|\\.)+"),
+	REGEX_MAIOR_ELEVACAO("Maior elevação: ([0-9]|\\.)+"),
+	REGEX_RITMOS("Km: [0-9]+['|’][0-9]+[\"|”]"),
+	REGEX_RITMO_MEDIO("Ritmo médio: [0-9]{2}['|’][0-9]{2}[\"|”]"),
+	REGEX_RITMO_MAXIMO("Ritmo máximo: [0-9]{2}['|’][0-9]{2}[\"|”]");
 	
 	private String value;
 

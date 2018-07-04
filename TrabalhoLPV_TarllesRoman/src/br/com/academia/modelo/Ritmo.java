@@ -13,6 +13,11 @@ public class Ritmo {
 		this.km = km;
 		this.tempo = tempo;
 	}
+	
+	public Ritmo(double km, double tempo) {
+		this.km = km;
+		this.tempo = tempo;
+	}
 
 	public int getId() {
 		return id;

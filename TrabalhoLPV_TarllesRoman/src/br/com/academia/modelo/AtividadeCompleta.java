@@ -19,6 +19,14 @@ public class AtividadeCompleta extends Atividade {
 		super(id, aluno, data, tempo, atividade, duracao, distancia, calorias, passos);
 		this.ritmos = new ArrayList<>();
 	}
+	
+	public AtividadeCompleta(Atividade simple) {
+		super(simple.getId(), simple.getAluno(), simple.getData(), simple.getTempo(),
+				simple.getAtividade(), simple.getDuracao(), simple.getDistancia(),
+				simple.getCalorias(), simple.getPassos());
+		
+		this.ritmos = new ArrayList<>();
+	}
 
 	public AtividadeCompleta(int idCompleta, double velocidadeMedia, double velocidadeMaxima, double ritmoMedio,
 			double ritmoMaximo, double menorElevacao, double maiorElevacao) {
