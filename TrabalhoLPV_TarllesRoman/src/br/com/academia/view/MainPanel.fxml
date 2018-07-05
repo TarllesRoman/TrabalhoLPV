@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="1074.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.academia.controle.MainPanelController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="1074.0" styleClass="anchor" stylesheets="@MainPanel.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.academia.controle.MainPanelController">
    <children>
       <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -30,6 +30,19 @@
               <MenuItem fx:id="miImportarEF" mnemonicParsing="false" onAction="#acaoImportar" text="Importar Exercício F." />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Editar">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Aluno" />
+                <MenuItem mnemonicParsing="false" text="Atividade" />
+                <MenuItem mnemonicParsing="false" text="Usuários" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Sair">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Sair" />
+                  <MenuItem mnemonicParsing="false" text="Sair e Fechar" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
       <Separator layoutX="387.0" layoutY="25.0" orientation="VERTICAL" prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="387.0" AnchorPane.topAnchor="25.0" />
@@ -115,7 +128,7 @@
             <Font name="Verdana Bold" size="15.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" layoutX="441.0" layoutY="50.0" prefHeight="50.0" prefWidth="400.0" style="-fx-border-color: #cfcfcf; -fx-border-radius: 3px;">
+      <HBox alignment="CENTER" layoutX="441.0" layoutY="50.0" prefHeight="50.0" prefWidth="400.0" styleClass="panel-border">
          <children>
             <VBox alignment="CENTER_LEFT" prefHeight="61.0" prefWidth="221.0">
                <children>
@@ -142,12 +155,12 @@
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
          </padding>
       </HBox>
-      <Label layoutX="452.0" layoutY="45.0" style="-fx-background-color: white;" text="Intervalo">
+      <Label layoutX="452.0" layoutY="45.0" styleClass="title-border" text="Intervalo">
          <font>
             <Font name="Verdana Bold Italic" size="9.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" layoutX="851.0" layoutY="50.0" prefHeight="50.0" prefWidth="170.0" style="-fx-border-color: #cfcfcf; -fx-border-radius: 3px;">
+      <HBox alignment="CENTER" layoutX="851.0" layoutY="50.0" prefHeight="50.0" prefWidth="170.0" styleClass="panel-border">
          <padding>
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
          </padding>
@@ -167,12 +180,12 @@
             </RadioButton>
          </children>
       </HBox>
-      <Label layoutX="862.0" layoutY="45.0" style="-fx-background-color: white;" text="Modelos">
+      <Label layoutX="862.0" layoutY="45.0" styleClass="title-border" text="Modelos">
          <font>
             <Font name="Verdana Bold Italic" size="9.0" />
          </font>
       </Label>
-      <HBox alignment="BOTTOM_CENTER" layoutX="456.0" layoutY="108.0" prefHeight="38.0" prefWidth="550.0" style="-fx-border-color: #cfcfcf; -fx-border-radius: 3px;">
+      <HBox alignment="BOTTOM_CENTER" layoutX="456.0" layoutY="108.0" prefHeight="38.0" prefWidth="550.0" styleClass="panel-border">
          <padding>
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
          </padding>
@@ -185,14 +198,17 @@
             <ComboBox fx:id="cbExercicios" onAction="#carregarGrafico" prefHeight="25.0" prefWidth="275.0" promptText="Selecione o tipo de exercicio" />
          </children>
       </HBox>
-      <Label layoutX="467.0" layoutY="103.0" style="-fx-background-color: white;" text="Tipos">
+      <Label layoutX="467.0" layoutY="103.0" styleClass="title-border" text="Tipos">
          <font>
             <Font name="Verdana Bold Italic" size="9.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" layoutX="3.0" layoutY="49.0" prefHeight="50.0" prefWidth="381.0" style="-fx-border-color: #cfcfcf; -fx-border-radius: 3px;">
+      <HBox alignment="CENTER" layoutX="3.0" layoutY="49.0" prefHeight="50.0" prefWidth="381.0" styleClass="panel-border">
          <children>
-            <TextField fx:id="tfCliente" onAction="#onactCarregar" prefHeight="25.0" prefWidth="297.0" />
+            <TextField fx:id="tfCliente" onAction="#onactCarregar" prefHeight="25.0" prefWidth="297.0">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin></TextField>
             <Button fx:id="btnBuscar" mnemonicParsing="false" onAction="#onactCarregar" prefHeight="25.0" prefWidth="73.0" text="Carregar">
                <font>
                   <Font name="System Bold" size="12.0" />
@@ -208,7 +224,7 @@
             <Font name="Verdana Bold" size="15.0" />
          </font>
       </Label>
-      <Label layoutX="15.0" layoutY="44.0" style="-fx-background-color: white;" text="Buscar">
+      <Label layoutX="15.0" layoutY="44.0" styleClass="title-border" text="Buscar">
          <font>
             <Font name="Verdana Bold Italic" size="9.0" />
          </font>

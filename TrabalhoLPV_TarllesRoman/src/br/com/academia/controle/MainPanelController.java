@@ -66,6 +66,11 @@ public class MainPanelController implements Initializable{
 	private List<Aluno> alunos;
 	private Aluno alunoCarregado;
 	private List<Atividade> exercicios;
+	
+	@FXML
+	public void sair() {
+		System.out.println("bye");
+	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
