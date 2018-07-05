@@ -24,15 +24,19 @@ import br.com.academia.utils.FileImporter;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.chart.Chart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -43,11 +47,13 @@ public class MainPanelController implements Initializable{
 
 	//Variáveis referentes a área 2. Área 2 == canto médio esquerdo
 	@FXML private TextField tfCliente;
-	@FXML private Button btnBuscar, btnRelatorio;
+	@FXML private Button btnBuscar;
 	@FXML private Label lblNome, lblSexo, lblPeso, lblAltura, lblDataN, lblEmail, lblNaoEncontrado;
-
-	//Variáveis referentes a área 3. Área 3 == canto inferior esquerdo
-	@FXML private Label lblMaiorDur,lblMaiorDist, lblMaxCal, lblMaiorPassos, lblMaiorVel;
+	
+	//Variaveis referentes a area 3. Área 3 == cando inferior esquerdo
+	@FXML private TableView<Atividade> tbvAtividades;
+	@FXML private Button btnRelatorio;
+	@FXML private Pagination pgTabela;
 
 	//Variáveis referentes a área 4. Área 4 == canto superior direito
 	@FXML private Pane paneGrafico;
@@ -67,7 +73,10 @@ public class MainPanelController implements Initializable{
 			limparTela();
 			
 			exercicios = new ArrayList<>();
-
+			
+			tbvAtividades.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("atividade"));
+			tbvAtividades.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("data"));
+			
 			dtpDe.getEditor().setText(sdf.format(new Date().getTime() - 6.048e+8));
 			dtpAte.getEditor().setText(sdf.format(new Date()));
 
@@ -93,6 +102,15 @@ public class MainPanelController implements Initializable{
 
 	}
 	
+	private Node createPage(int pageIndex) {
+		int from = pageIndex * 4,
+			to = Math.min(from + 4, exercicios.size());
+		
+		tbvAtividades.setItems(FXCollections.observableArrayList(exercicios.subList(from, to)));
+		
+		return tbvAtividades;
+	}
+	
 	@FXML
 	public void onactCarregar() {
 		try {
@@ -101,7 +119,7 @@ public class MainPanelController implements Initializable{
 			
 			carregarAluno();
 			carregarGrafico();
-			pushExercicios();
+			pullExercicios();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -119,7 +137,7 @@ public class MainPanelController implements Initializable{
 		lblEmail.setText(alunoCarregado.getEmail());
 	}
 	
-	public void pushExercicios() {
+	private void pullExercicios() {
 		try {
 			exercicios = AtividadeDAO.selecionar(alunoCarregado, Main.conexao);
 			
@@ -132,10 +150,19 @@ public class MainPanelController implements Initializable{
 			cbExercicios.setItems(FXCollections.observableArrayList(aux));
 			cbExercicios.getSelectionModel().select(0);
 			
+			pgTabela.setPageCount( (exercicios.size()%4 > 0)? (exercicios.size()/4+1) : exercicios.size()/4 );
+			pgTabela.setPageFactory(this::createPage);
+			
 		} catch (SQLException e) {	}
 	}
 
-	public void carregarGrafico() {
+	@FXML
+	private void requestAtividade() {
+		AlertHandler.showAlertConfirm("", "", "Funcionou?");
+	}
+	
+	@FXML
+	private void carregarGrafico() {
 		limparGrafico();
 
 		DataSetTypes typeDataSet = DataSetTypes.searchDataSetType(cbGraficos.getSelectionModel().getSelectedItem());
@@ -152,7 +179,7 @@ public class MainPanelController implements Initializable{
 						new java.sql.Date( sdf.parse(dtpAte.getEditor().getText()).getTime() ),
 						Main.conexao),	typeDataSet, atividade);
 			}else {
-				chart = ChartFactory.createBarChart(AtividadeDAO.selecionar(
+				chart = ChartFactory.createLineChart(AtividadeDAO.selecionar(
 						alunoCarregado,
 						new java.sql.Date( sdf.parse(dtpDe.getEditor().getText()).getTime() ),
 						new java.sql.Date( sdf.parse(dtpAte.getEditor().getText()).getTime() ),
@@ -218,7 +245,6 @@ public class MainPanelController implements Initializable{
 	/**Altera todos os labels de informações para o valor: "-" e retira o gráfico do pane */
 	private void limparTela() {
 		limparArea2();
-		limparArea3();
 		limparGrafico();
 	}
 
@@ -230,15 +256,6 @@ public class MainPanelController implements Initializable{
 		lblAltura.setText("-");
 		lblDataN.setText("-");
 		lblEmail.setText("-");
-	}
-
-	//idem ao limparTela mas apenas para área 3
-	private void limparArea3() {
-		lblMaiorDur.setText("-");
-		lblMaiorDist.setText("-");
-		lblMaxCal.setText("-");
-		lblMaiorPassos.setText("-");
-		lblMaiorVel.setText("-");
 	}
 
 	//idem ao limparTela mas apenas para área do gráfico	

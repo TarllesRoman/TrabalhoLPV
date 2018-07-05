@@ -11,6 +11,7 @@ import br.com.academia.modelo.AtividadeCompleta;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.Chart;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
@@ -28,6 +29,53 @@ public class ChartFactory {
 		
 		//criando o gráfico
 		BarChart<String, Number> grafico = new BarChart<>(eixoX, eixoY);
+		
+		if(atividade == null)
+			grafico.setTitle(tipoDataSet.nome);
+		else
+			grafico.setTitle(tipoDataSet.nome + "(" + atividade + ")");
+		
+		grafico.setPrefSize(690, 408);
+		grafico.setMaxSize(690, 408);
+		
+		Map<String, XYChart.Series<String, Number>> series = new HashMap<>();
+		
+		XYChart.Series<String, Number> serieAux;
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
+		//populando as séries com dados
+		for(Atividade atv : atividades) {
+			if( atividade != null && !atv.getAtividade().equals(atividade) ) continue;
+			if(series.containsKey(atv.getAtividade()))
+				((XYChart.Series<String, Number>)series.get(atv.getAtividade())).getData()
+						.add(new Data<>(sdf.format( atv.getData() ),
+								tipoDataSet.getValorCorrespondente(atv)));
+			else {
+				serieAux = new XYChart.Series<>();
+				serieAux.setName(atv.getAtividade());
+				serieAux.getData().add(new Data<>(sdf.format( atv.getData() ),
+										tipoDataSet.getValorCorrespondente(atv)));
+				series.put(atv.getAtividade(), serieAux);
+			}
+		}
+		
+		grafico.getData().addAll(series.values());
+		
+		return grafico;
+	}
+	
+	public static Chart createLineChart(List<Atividade> atividades, DataSetTypes tipoDataSet, String atividade) {
+		
+		//Definindo os eixos
+		CategoryAxis eixoX = new CategoryAxis();
+		NumberAxis eixoY = new NumberAxis();
+
+		eixoX.setLabel(tipoDataSet.nomeEixoX);
+		eixoY.setLabel(tipoDataSet.nomeEixoY);
+		
+		//criando o gráfico
+		LineChart<String, Number> grafico = new LineChart<>(eixoX, eixoY);
 		
 		if(atividade == null)
 			grafico.setTitle(tipoDataSet.nome);
