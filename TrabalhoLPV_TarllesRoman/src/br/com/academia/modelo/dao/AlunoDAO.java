@@ -109,7 +109,7 @@ public class AlunoDAO {
 		return aluno;
 	}
 	
-	/**Retorna o aluno que possue esse email ou null*/
+	/**Atualiza com essas informações o aluno que possue esse id*/
 	public static Aluno atualizar(Connection con, Aluno aluno) throws SQLException {
 		String sql = "UPDATE public.aluno SET nome=?, sexo=?, email=?, cpf=?,"
 				+ "whatsapp=?, altura=?, peso=?, data_nascimento=? WHERE id=?";
@@ -125,6 +125,19 @@ public class AlunoDAO {
 		state.setDouble(7, aluno.getPeso());
 		state.setDate(8, aluno.getDataNascimento());
 		state.setInt(9, aluno.getId());
+		
+		state.execute();
+		
+		return aluno;
+	}
+	
+	/**Remove em cascata o aluno que possui esse id*/
+	public static Aluno remover(Connection con, Aluno aluno) throws SQLException {
+		String sql = "DELETE FROM public.aluno WHERE id=?";
+		
+		PreparedStatement state = con.prepareStatement(sql);
+		
+		state.setInt(1, aluno.getId());
 		
 		state.execute();
 		

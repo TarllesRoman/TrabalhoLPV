@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 import br.com.academia.Main;
@@ -68,6 +69,7 @@ public class MainPanelController implements Initializable{
 	private List<Aluno> alunos;
 	private Aluno alunoCarregado;
 	private List<Atividade> exercicios;
+	private AutoCompletionBinding<String> acb = null;
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -92,8 +94,20 @@ public class MainPanelController implements Initializable{
 			for(Aluno a : alunos) {
 				autoCompleteStrings.add(a.getNome() + " - " + a.getEmail());
 			}
-			TextFields.bindAutoCompletion(tfAluno, autoCompleteStrings);
+			
+			if(acb != null)
+				acb.dispose();
+			
+			acb = TextFields.bindAutoCompletion(tfAluno, autoCompleteStrings);
 
+			if(autoCompleteStrings.isEmpty()) {
+				lblNaoEncontrado.setText("Nenhum cliente encontrado");
+				lblNaoEncontrado.setVisible(true);
+				return;
+			}else {
+				lblNaoEncontrado.setVisible(false);
+			}
+			
 			tfAluno.setText(autoCompleteStrings.get(0));
 			alunoCarregado = alunos.get(0);
 			
@@ -107,6 +121,8 @@ public class MainPanelController implements Initializable{
 	@FXML
 	private void onactCarregar() {
 		try {
+			limparTela();
+			
 			alunoCarregado = AlunoDAO.selecionar(Main.conexao,
 							tfAluno.getText().split(" - ")[1]);
 			
@@ -115,6 +131,8 @@ public class MainPanelController implements Initializable{
 			pullExercicios();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} catch (NullPointerException e) {
+			AlertHandler.showAlertErro(Main.TITULO, "Usuário não encontrado", "Experimente usar o auto-complete");	
 		}
 	}
 
@@ -188,6 +206,29 @@ public class MainPanelController implements Initializable{
 			stageEditAluno.setResizable(false);
 			stageEditAluno.setScene(scene);
 			stageEditAluno.showAndWait();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	private void onactEditarUsuarios() {
+		try {
+			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/EditarUsuario.fxml"));
+			Scene scene = new Scene(root,435,225);
+			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
+			
+			Stage stageEditAluno = new Stage();
+			
+			stageEditAluno.setTitle(Main.TITULO + ": Editar Usuários");
+			stageEditAluno.centerOnScreen();
+			stageEditAluno.initModality(Modality.APPLICATION_MODAL);
+			stageEditAluno.setResizable(false);
+			stageEditAluno.setScene(scene);
+			stageEditAluno.showAndWait();
+			
+			initialize(null, null);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -273,6 +314,7 @@ public class MainPanelController implements Initializable{
 	private void limparTela() {
 		limparArea2();
 		limparGrafico();
+		alunoCarregado = null;
 	}
 
 	//idem ao limparTela mas apenas para área 2

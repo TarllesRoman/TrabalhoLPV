@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 import br.com.academia.Main;
@@ -21,9 +22,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.util.converter.LocalDateStringConverter;
 
 public class EditarAlunoController implements Initializable {
+	
+	@FXML
+	private Pane pane;
+	  
 	@FXML
 	private Button btnAlterar, btnExcluir, btnBuscar;
 
@@ -35,12 +41,13 @@ public class EditarAlunoController implements Initializable {
 
 	private List<Aluno> alunos;
 	private Aluno alunoCarregado;
-	List<String> autoCompleteStrings;
+	private List<String> autoCompleteStrings;
+	AutoCompletionBinding<String> acb = null;
 
 	@Override
 	public void initialize(URL path, ResourceBundle rb) {
 		try {
-			disableAltExc(true);
+			limpar();
 
 			alunos = AlunoDAO.selecionar(Main.conexao);
 
@@ -53,7 +60,11 @@ public class EditarAlunoController implements Initializable {
 			for(Aluno a : alunos) {
 				autoCompleteStrings.add(a.getNome());
 			}
-			TextFields.bindAutoCompletion(tfNome, autoCompleteStrings);
+			
+			if(acb != null)
+				acb.dispose();
+			
+			acb = TextFields.bindAutoCompletion(tfNome, autoCompleteStrings);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -101,7 +112,7 @@ public class EditarAlunoController implements Initializable {
 				AlertHandler.showAlertInfo(Main.TITULO, "Dados atualizados",
 						"As informações de "+alunoCarregado.getNome()+" foram atualizadas");
 				
-				limpar();
+				initialize(null, null);
 				
 			}else {
 				AlertHandler.showAlertInfo(Main.TITULO, "Dados mantidos", "As informações não foram atualizadas");
@@ -130,7 +141,25 @@ public class EditarAlunoController implements Initializable {
 
 	@FXML
 	private void onactExcluir(ActionEvent event) {
+		try {
+			boolean ok = AlertHandler.showAlertConfirm(Main.TITULO, "Confirma a exclusão dos dados?",
+					"Você deseja realmente excluir as informações de "+ alunoCarregado.getNome() + "?");
 
+			if(ok) {
+				AlunoDAO.remover(Main.conexao, alunoCarregado);
+				
+				AlertHandler.showAlertInfo(Main.TITULO, "Dados excluidos",
+						"As informações de "+alunoCarregado.getNome()+" foram excluidas");
+				
+				initialize(null, null);
+				
+			}else {
+				AlertHandler.showAlertInfo(Main.TITULO, "Dados mantidos", "As informações não foram excluidas");
+			}
+
+		} catch (SQLException e) {
+			AlertHandler.showAlertErro(Main.TITULO, "Impossível excluir aluno", "Confira os dados e tente novamente");
+		} 
 	}
 
 	private void disableAltExc(boolean disable) {
@@ -149,6 +178,7 @@ public class EditarAlunoController implements Initializable {
 		tfEmail.setText("");
 
 		alunoCarregado = null;
+		disableAltExc(true);
 	}
 
 }
