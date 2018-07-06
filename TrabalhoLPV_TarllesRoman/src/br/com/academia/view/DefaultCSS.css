@@ -1,0 +1,38 @@
+.anchor{
+	-fx-background-color: white;
+} 
+
+.panel-border{
+	-fx-border-color: #cfcfcf;
+	-fx-border-radius: 3;
+}
+
+.title-border{
+	-fx-background-color: white;
+	-fx-background-radius: 5;
+	-fx-font-family: 'Verdana';
+	-fx-font-size: 9px;
+	-fx-font-style: italic;
+	-fx-font-weight: bolder;
+}
+
+.title-large-border{
+	-fx-background-color: white;
+	-fx-background-radius: 5;
+	-fx-font-family: 'Verdana';
+	-fx-font-size: 16px;
+	-fx-font-style: italic;
+	-fx-font-weight: bolder;
+}
+
+.fixed-labels{
+	-fx-font-family: "verdana";
+	-fx-font-weight: bolder;
+	-fx-font-size: 12px;
+}
+
+.large-fixed-labels{
+	-fx-font-family: "verdana";
+	-fx-font-weight: bolder;
+	-fx-font-size: 15px;
+}

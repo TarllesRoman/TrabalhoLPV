@@ -23,7 +23,7 @@ public class Main extends Application {
 		try {
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/MainPanel.fxml"));
 			Scene scene = new Scene(root,1074,630);
-			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/MainPanel.css").toExternalForm());
+			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
 			
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				@Override

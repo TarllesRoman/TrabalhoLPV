@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="1074.0" styleClass="anchor" stylesheets="@MainPanel.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.academia.controle.MainPanelController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="1074.0" styleClass="anchor" stylesheets="@DefaultCSS.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.academia.controle.MainPanelController">
    <children>
       <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -47,32 +47,32 @@
       </MenuBar>
       <Separator layoutX="387.0" layoutY="25.0" orientation="VERTICAL" prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="387.0" AnchorPane.topAnchor="25.0" />
       <Separator layoutY="355.0" prefHeight="0.0" prefWidth="388.0" AnchorPane.leftAnchor="0.0" />
-      <Label layoutX="13.0" layoutY="120.0" text="Nome:">
+      <Label layoutX="13.0" layoutY="120.0" styleClass="fixed-labels" text="Nome:">
          <font>
             <Font name="Verdana Bold" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="13.0" layoutY="156.0" text="Sexo:">
+      <Label layoutX="13.0" layoutY="156.0" styleClass="fixed-labels" text="Sexo:">
          <font>
             <Font name="Verdana Bold" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="13.0" layoutY="193.0" text="Peso:">
+      <Label layoutX="13.0" layoutY="193.0" styleClass="fixed-labels" text="Peso:">
          <font>
             <Font name="Verdana Bold" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="11.0" layoutY="235.0" text="Altura:">
+      <Label layoutX="11.0" layoutY="235.0" styleClass="fixed-labels" text="Altura:">
          <font>
             <Font name="Verdana Bold" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="11.0" layoutY="275.0" text="Data de Nascimento:">
+      <Label layoutX="11.0" layoutY="275.0" styleClass="fixed-labels" text="Data de Nascimento:">
          <font>
             <Font name="Verdana Bold" size="12.0" />
          </font>
       </Label>
-      <Label layoutX="10.0" layoutY="310.0" text="E-mail:">
+      <Label layoutX="10.0" layoutY="310.0" styleClass="fixed-labels" text="E-mail:">
          <font>
             <Font name="Verdana Bold" size="12.0" />
          </font>
@@ -107,7 +107,7 @@
             <Font name="Times New Roman" size="13.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" layoutY="370.0" prefHeight="19.0" prefWidth="388.0" text="Exercícios Físicos">
+      <Label alignment="CENTER" layoutY="370.0" prefHeight="19.0" prefWidth="388.0" styleClass="large-fixed-labels" text="Exercícios Físicos">
          <font>
             <Font name="Verdana Bold" size="15.0" />
          </font>
@@ -123,7 +123,7 @@
          </font>
       </Button>
       <Pane fx:id="paneGrafico" layoutX="391.0" layoutY="181.0" prefHeight="408.0" prefWidth="611.0" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="391.0" AnchorPane.rightAnchor="4.0" />
-      <Label alignment="CENTER" layoutX="391.0" layoutY="26.0" prefHeight="3.0" prefWidth="605.0" text="Gráficos" AnchorPane.leftAnchor="391.0" AnchorPane.rightAnchor="4.0">
+      <Label alignment="CENTER" layoutX="391.0" layoutY="26.0" prefHeight="3.0" prefWidth="605.0" styleClass="large-fixed-labels" text="Gráficos" AnchorPane.leftAnchor="391.0" AnchorPane.rightAnchor="4.0">
          <font>
             <Font name="Verdana Bold" size="15.0" />
          </font>
@@ -132,7 +132,7 @@
          <children>
             <VBox alignment="CENTER_LEFT" prefHeight="61.0" prefWidth="221.0">
                <children>
-                  <Label alignment="CENTER" prefHeight="20.0" prefWidth="200.0" text="de">
+                  <Label alignment="CENTER" prefHeight="20.0" prefWidth="200.0" styleClass="fixed-labels" text="de">
                      <font>
                         <Font name="Verdana Bold" size="12.0" />
                      </font>
@@ -142,7 +142,7 @@
             </VBox>
             <VBox alignment="CENTER_RIGHT" prefHeight="61.0" prefWidth="196.0">
                <children>
-                  <Label alignment="CENTER" prefHeight="20.0" prefWidth="200.0" text="até">
+                  <Label alignment="CENTER" prefHeight="20.0" prefWidth="200.0" styleClass="fixed-labels" text="até">
                      <font>
                         <Font name="Verdana Bold" size="12.0" />
                      </font>
@@ -165,7 +165,7 @@
             <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
          </padding>
          <children>
-            <RadioButton mnemonicParsing="false" onAction="#carregarGrafico" prefHeight="16.0" prefWidth="90.0" selected="true" text="Colunas">
+            <RadioButton mnemonicParsing="false" onAction="#carregarGrafico" prefHeight="16.0" prefWidth="90.0" selected="true" styleClass="fixed-labels" text="Colunas">
                <font>
                   <Font name="Verdana Bold" size="12.0" />
                </font>
@@ -173,7 +173,7 @@
                   <ToggleGroup fx:id="tgTiposGraficos" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" onAction="#carregarGrafico" prefHeight="16.0" prefWidth="64.0" text="Linha" toggleGroup="$tgTiposGraficos">
+            <RadioButton mnemonicParsing="false" onAction="#carregarGrafico" prefHeight="16.0" prefWidth="64.0" styleClass="fixed-labels" text="Linha" toggleGroup="$tgTiposGraficos">
                <font>
                   <Font name="Verdana Bold" size="12.0" />
                </font>
@@ -219,7 +219,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </HBox>
-      <Label alignment="CENTER" layoutX="-2.0" layoutY="25.0" prefHeight="15.0" prefWidth="388.0" text="Cliente">
+      <Label alignment="CENTER" layoutX="-2.0" layoutY="25.0" prefHeight="15.0" prefWidth="388.0" styleClass="large-fixed-labels" text="Aluno">
          <font>
             <Font name="Verdana Bold" size="15.0" />
          </font>
