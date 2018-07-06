@@ -2,6 +2,7 @@ package br.com.academia;
 	
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 import br.com.academia.utils.FabricaDeConexao;
 import br.com.academia.utils.FileImporter;
@@ -17,6 +18,8 @@ import javafx.fxml.FXMLLoader;
 public class Main extends Application {
 	
 	public static Connection conexao;
+	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	public static final String TITULO = "ACADEMIA JEDI";
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -37,6 +40,7 @@ public class Main extends Application {
 				}
 			});
 			
+			primaryStage.setTitle(TITULO);
 			primaryStage.setResizable(false);
 			primaryStage.setScene(scene);
 			primaryStage.show();

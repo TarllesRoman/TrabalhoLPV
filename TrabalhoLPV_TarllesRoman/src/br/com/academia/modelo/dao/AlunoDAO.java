@@ -108,4 +108,27 @@ public class AlunoDAO {
 		state.close();
 		return aluno;
 	}
+	
+	/**Retorna o aluno que possue esse email ou null*/
+	public static Aluno atualizar(Connection con, Aluno aluno) throws SQLException {
+		String sql = "UPDATE public.aluno SET nome=?, sexo=?, email=?, cpf=?,"
+				+ "whatsapp=?, altura=?, peso=?, data_nascimento=? WHERE id=?";
+		
+		PreparedStatement state = con.prepareStatement(sql);
+		
+		state.setString(1, aluno.getNome());
+		state.setString(2, aluno.getSexo());
+		state.setString(3, aluno.getEmail());
+		state.setString(4, aluno.getCpf());
+		state.setString(5, aluno.getWhatsapp());
+		state.setDouble(6, aluno.getAltura());
+		state.setDouble(7, aluno.getPeso());
+		state.setDate(8, aluno.getDataNascimento());
+		state.setInt(9, aluno.getId());
+		
+		state.execute();
+		
+		return aluno;
+	}
+	
 }//class AlunoDAO

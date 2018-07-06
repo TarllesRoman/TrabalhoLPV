@@ -66,7 +66,7 @@ public class FileImporter {
 			atividade.setDistancia( Double.parseDouble(aux.split(" ")[1].replace(".", "").replace(",", ".")) );
 			
 			aux = obterRegex(SettingsKeys.REGEX_CALORIAS_PERDIDAS.getValue(), conteudoArquivo);
-			atividade.setCalorias(Double.parseDouble(aux.split(" ")[2]));
+			atividade.setCalorias(Double.parseDouble(aux.split(" ")[2].replace(".", "").replace(",", ".")));
 			
 			aux = obterRegex(SettingsKeys.REGEX_PASSOS.getValue(), conteudoArquivo);
 			atividade.setPassos( Integer.parseInt(aux.split(" ")[1].replace(".", "")) );
@@ -81,13 +81,13 @@ public class FileImporter {
 			
 			try {
 				aux = obterRegex(SettingsKeys.REGEX_VELOCIDADE_MEDIA.getValue(), conteudoArquivo);
-				atividadeCompleta.setVelocidadeMedia(Double.parseDouble(aux.split(" ")[1]));
+				atividadeCompleta.setVelocidadeMedia(Double.parseDouble(aux.split(" ")[1].replace(".", "").replace(",", ".")));
 				isCompleta = true;
 			}catch(RuntimeException e) {	}
 			
 			try {
 				aux = obterRegex(SettingsKeys.REGEX_VELOCIDADE_MAXIMA.getValue(), conteudoArquivo);
-				atividadeCompleta.setVelocidadeMaxima(Double.parseDouble(aux.split(" ")[1]));
+				atividadeCompleta.setVelocidadeMaxima(Double.parseDouble(aux.split(" ")[1].replace(".", "").replace(",", ".")));
 				isCompleta = true;
 			}catch(RuntimeException e) {	}
 			
@@ -178,12 +178,12 @@ public class FileImporter {
 
 			aux = obterRegex(SettingsKeys.REGEX_ALTURA.getValue(), conteudoArquivo);
 			aux = aux.substring(aux.indexOf(" ") + 1, aux.lastIndexOf(" "));
-			aux = aux.replace(",", ".");
+			aux = aux.replace(".", "").replace(",", ".");
 			aluno.setAltura(Double.parseDouble(aux));
 
 			aux = obterRegex(SettingsKeys.REGEX_PESO.getValue(), conteudoArquivo);
 			aux = aux.substring(aux.indexOf(" ") + 1, aux.lastIndexOf(" "));
-			aux = aux.replace(",", ".");
+			aux = aux.replace(".", "").replace(",", ".");
 			aluno.setPeso(Double.parseDouble(aux));
 
 			aluno.setEmail(email);

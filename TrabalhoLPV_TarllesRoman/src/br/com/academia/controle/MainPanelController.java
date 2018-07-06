@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,8 +22,10 @@ import br.com.academia.utils.ChartFactory.DataSetTypes;
 import br.com.academia.utils.FileImporter;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.chart.Chart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -37,16 +38,19 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class MainPanelController implements Initializable{
 	//Variáveis referentes a área 0. Área 0 == menu superior
 	@FXML private MenuItem miImportarEF;
 
 	//Variáveis referentes a área 2. Área 2 == canto médio esquerdo
-	@FXML private TextField tfCliente;
+	@FXML private TextField tfAluno;
 	@FXML private Button btnBuscar;
 	@FXML private Label lblNome, lblSexo, lblPeso, lblAltura, lblDataN, lblEmail, lblNaoEncontrado;
 	
@@ -61,16 +65,9 @@ public class MainPanelController implements Initializable{
 	@FXML private ComboBox<String> cbGraficos, cbExercicios;
 	@FXML private DatePicker dtpDe, dtpAte;
 
-	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");;
-
 	private List<Aluno> alunos;
 	private Aluno alunoCarregado;
 	private List<Atividade> exercicios;
-	
-	@FXML
-	public void sair() {
-		System.out.println("bye");
-	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -82,8 +79,8 @@ public class MainPanelController implements Initializable{
 			tbvAtividades.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("atividade"));
 			tbvAtividades.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("data"));
 			
-			dtpDe.getEditor().setText(sdf.format(new Date().getTime() - 6.048e+8));
-			dtpAte.getEditor().setText(sdf.format(new Date()));
+			dtpDe.getEditor().setText(Main.sdf.format(new Date().getTime() - 6.048e+8));
+			dtpAte.getEditor().setText(Main.sdf.format(new Date()));
 
 			//setando tipos gráficos
 			cbGraficos.setItems(FXCollections.observableArrayList(DataSetTypes.getNomes()));
@@ -95,9 +92,9 @@ public class MainPanelController implements Initializable{
 			for(Aluno a : alunos) {
 				autoCompleteStrings.add(a.getNome() + " - " + a.getEmail());
 			}
-			TextFields.bindAutoCompletion(tfCliente, autoCompleteStrings);
+			TextFields.bindAutoCompletion(tfAluno, autoCompleteStrings);
 
-			tfCliente.setText(autoCompleteStrings.get(0));
+			tfAluno.setText(autoCompleteStrings.get(0));
 			alunoCarregado = alunos.get(0);
 			
 			onactCarregar();
@@ -107,20 +104,11 @@ public class MainPanelController implements Initializable{
 
 	}
 	
-	private Node createPage(int pageIndex) {
-		int from = pageIndex * 4,
-			to = Math.min(from + 4, exercicios.size());
-		
-		tbvAtividades.setItems(FXCollections.observableArrayList(exercicios.subList(from, to)));
-		
-		return tbvAtividades;
-	}
-	
 	@FXML
-	public void onactCarregar() {
+	private void onactCarregar() {
 		try {
 			alunoCarregado = AlunoDAO.selecionar(Main.conexao,
-							tfCliente.getText().split(" - ")[1]);
+							tfAluno.getText().split(" - ")[1]);
 			
 			carregarAluno();
 			carregarGrafico();
@@ -128,37 +116,6 @@ public class MainPanelController implements Initializable{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public void carregarAluno() {
-		limparArea2();
-
-		//Coloca os atributos do cliente em seus lugares na cena
-		lblNome.setText(alunoCarregado.getNome());
-		lblSexo.setText(alunoCarregado.getSexo());
-		lblPeso.setText( String.format("%.2f Kg", alunoCarregado.getPeso()) );
-		lblAltura.setText( String.format("%.2f m", alunoCarregado.getAltura()) );
-		lblDataN.setText(sdf.format( alunoCarregado.getDataNascimento() ));
-		lblEmail.setText(alunoCarregado.getEmail());
-	}
-	
-	private void pullExercicios() {
-		try {
-			exercicios = AtividadeDAO.selecionar(alunoCarregado, Main.conexao);
-			
-			ArrayList<String> aux = new ArrayList<>();
-			aux.add("Todos os exercícios");
-			for(Atividade a : exercicios) {
-				if(!aux.contains(a.getAtividade()))
-					aux.add(a.getAtividade());
-			}
-			cbExercicios.setItems(FXCollections.observableArrayList(aux));
-			cbExercicios.getSelectionModel().select(0);
-			
-			pgTabela.setPageCount( (exercicios.size()%4 > 0)? (exercicios.size()/4+1) : exercicios.size()/4 );
-			pgTabela.setPageFactory(this::createPage);
-			
-		} catch (SQLException e) {	}
 	}
 
 	@FXML
@@ -180,14 +137,14 @@ public class MainPanelController implements Initializable{
 			if( ((RadioButton)tgTiposGraficos.getSelectedToggle()).getText().equals("Colunas") ) {
 				chart = ChartFactory.createBarChart(AtividadeDAO.selecionar(
 						alunoCarregado,
-						new java.sql.Date( sdf.parse(dtpDe.getEditor().getText()).getTime() ),
-						new java.sql.Date( sdf.parse(dtpAte.getEditor().getText()).getTime() ),
+						new java.sql.Date( Main.sdf.parse(dtpDe.getEditor().getText()).getTime() ),
+						new java.sql.Date( Main.sdf.parse(dtpAte.getEditor().getText()).getTime() ),
 						Main.conexao),	typeDataSet, atividade);
 			}else {
 				chart = ChartFactory.createLineChart(AtividadeDAO.selecionar(
 						alunoCarregado,
-						new java.sql.Date( sdf.parse(dtpDe.getEditor().getText()).getTime() ),
-						new java.sql.Date( sdf.parse(dtpAte.getEditor().getText()).getTime() ),
+						new java.sql.Date( Main.sdf.parse(dtpDe.getEditor().getText()).getTime() ),
+						new java.sql.Date( Main.sdf.parse(dtpAte.getEditor().getText()).getTime() ),
 						Main.conexao),	typeDataSet, atividade);
 			}
 
@@ -200,7 +157,7 @@ public class MainPanelController implements Initializable{
 
 	/**Acao do menu item importar, exibe um filechooser e importa os arquivos escolhidos*/
 	@FXML
-	public void acaoImportar() {
+	private void acaoImportar() {
 		FileChooser fileChooser = new FileChooser ();
 		fileChooser.setTitle ("Importar exercício físico");
 
@@ -215,6 +172,71 @@ public class MainPanelController implements Initializable{
 		if(files == null) return; //janela foi fechada
 		importarArquivos(files);
 	}//acao importar
+	
+	@FXML
+	private void onactEditarAluno() {
+		try {
+			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/EditarAluno.fxml"));
+			Scene scene = new Scene(root,440,406);
+			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
+			
+			Stage stageEditAluno = new Stage();
+			
+			stageEditAluno.setTitle(Main.TITULO + ": Editar Aluno");
+			stageEditAluno.centerOnScreen();
+			stageEditAluno.initModality(Modality.APPLICATION_MODAL);
+			stageEditAluno.setResizable(false);
+			stageEditAluno.setScene(scene);
+			stageEditAluno.showAndWait();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void sair() {
+		System.out.println("bye");
+	}
+	
+	private Node createPage(int pageIndex) {
+		int from = pageIndex * 4,
+			to = Math.min(from + 4, exercicios.size());
+		
+		tbvAtividades.setItems(FXCollections.observableArrayList(exercicios.subList(from, to)));
+		
+		return tbvAtividades;
+	}
+	
+	private void carregarAluno() {
+		limparArea2();
+
+		//Coloca os atributos do cliente em seus lugares na cena
+		lblNome.setText(alunoCarregado.getNome());
+		lblSexo.setText(alunoCarregado.getSexo());
+		lblPeso.setText( String.format("%.2f Kg", alunoCarregado.getPeso()).replace(",", ".") );
+		lblAltura.setText( String.format("%.2f m", alunoCarregado.getAltura()).replace(",", ".") );
+		lblDataN.setText(Main.sdf.format( alunoCarregado.getDataNascimento() ));
+		lblEmail.setText(alunoCarregado.getEmail());
+	}
+	
+	private void pullExercicios() {
+		try {
+			exercicios = AtividadeDAO.selecionar(alunoCarregado, Main.conexao);
+			
+			ArrayList<String> aux = new ArrayList<>();
+			aux.add("Todos os exercícios");
+			for(Atividade a : exercicios) {
+				if(!aux.contains(a.getAtividade()))
+					aux.add(a.getAtividade());
+			}
+			cbExercicios.setItems(FXCollections.observableArrayList(aux));
+			cbExercicios.getSelectionModel().select(0);
+			
+			pgTabela.setPageCount( (exercicios.size()%4 > 0)? (exercicios.size()/4+1) : exercicios.size()/4 );
+			pgTabela.setPageFactory(this::createPage);
+			
+		} catch (SQLException e) {	}
+	}
 
 	/**Importa arquivos '.txt' com exercicios fisicos e no final mostra em um alert os arquivos que foram
 	 * importados.
