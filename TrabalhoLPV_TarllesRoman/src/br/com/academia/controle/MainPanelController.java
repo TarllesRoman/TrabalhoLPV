@@ -68,7 +68,7 @@ public class MainPanelController implements Initializable{
 
 	private List<Aluno> alunos;
 	private Aluno alunoCarregado;
-	private List<Atividade> exercicios;
+	private List<Atividade> atividades;
 	private AutoCompletionBinding<String> acb = null;
 
 	@Override
@@ -76,7 +76,7 @@ public class MainPanelController implements Initializable{
 		try {
 			limparTela();
 			
-			exercicios = new ArrayList<>();
+			atividades = new ArrayList<>();
 			
 			tbvAtividades.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("atividade"));
 			tbvAtividades.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("data"));
@@ -212,6 +212,26 @@ public class MainPanelController implements Initializable{
 	}
 	
 	@FXML
+	private void onactEditarAtividade() {
+		try {
+			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/EditarAtividade.fxml"));
+			Scene scene = new Scene(root,669,386);
+			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
+			
+			Stage stageEditAluno = new Stage();
+			
+			stageEditAluno.setTitle(Main.TITULO + ": Editar Aluno");
+			stageEditAluno.centerOnScreen();
+			stageEditAluno.initModality(Modality.APPLICATION_MODAL);
+			stageEditAluno.setResizable(false);
+			stageEditAluno.setScene(scene);
+			stageEditAluno.showAndWait();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
 	private void onactEditarUsuarios() {
 		try {
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/EditarUsuario.fxml"));
@@ -241,9 +261,9 @@ public class MainPanelController implements Initializable{
 	
 	private Node createPage(int pageIndex) {
 		int from = pageIndex * 4,
-			to = Math.min(from + 4, exercicios.size());
+			to = Math.min(from + 4, atividades.size());
 		
-		tbvAtividades.setItems(FXCollections.observableArrayList(exercicios.subList(from, to)));
+		tbvAtividades.setItems(FXCollections.observableArrayList(atividades.subList(from, to)));
 		
 		return tbvAtividades;
 	}
@@ -262,18 +282,18 @@ public class MainPanelController implements Initializable{
 	
 	private void pullExercicios() {
 		try {
-			exercicios = AtividadeDAO.selecionar(alunoCarregado, Main.conexao);
+			atividades = AtividadeDAO.selecionar(alunoCarregado, Main.conexao);
 			
 			ArrayList<String> aux = new ArrayList<>();
 			aux.add("Todos os exercícios");
-			for(Atividade a : exercicios) {
+			for(Atividade a : atividades) {
 				if(!aux.contains(a.getAtividade()))
 					aux.add(a.getAtividade());
 			}
 			cbExercicios.setItems(FXCollections.observableArrayList(aux));
 			cbExercicios.getSelectionModel().select(0);
 			
-			pgTabela.setPageCount( (exercicios.size()%4 > 0)? (exercicios.size()/4+1) : exercicios.size()/4 );
+			pgTabela.setPageCount( (atividades.size()%4 > 0)? (atividades.size()/4+1) : atividades.size()/4 );
 			pgTabela.setPageFactory(this::createPage);
 			
 		} catch (SQLException e) {	}

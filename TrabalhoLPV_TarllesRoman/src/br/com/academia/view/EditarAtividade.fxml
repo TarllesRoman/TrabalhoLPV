@@ -15,32 +15,34 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="457.0" prefWidth="669.0" styleClass="anchor" stylesheets="@DefaultCSS.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="386.0" prefWidth="669.0" styleClass="anchor" stylesheets="@DefaultCSS.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.academia.controle.EditarAtividadeController">
    <children>
       <Pane layoutX="14.0" layoutY="23.0" prefHeight="200.0" prefWidth="200.0" styleClass="panel-border" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="15.0">
          <children>
-            <Pagination layoutX="15.0" layoutY="153.0" prefHeight="247.0" prefWidth="620.0" />
-            <TableView layoutX="30.0" layoutY="165.0" prefHeight="178.0" prefWidth="591.0">
+            <Pagination fx:id="pgTabela" layoutX="15.0" layoutY="153.0" prefHeight="191.0" prefWidth="620.0" />
+            <TableView fx:id="tbvAtividades" layoutX="30.0" layoutY="165.0" prefHeight="131.0" prefWidth="591.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn prefWidth="134.0" text="Nome" />
+                <TableColumn prefWidth="150.0" text="Data" />
+                  <TableColumn prefWidth="148.0" text="Tempo" />
+                  <TableColumn prefWidth="158.0" text="Aluno" />
               </columns>
             </TableView>
             <HBox alignment="CENTER" layoutX="64.0" layoutY="29.0" prefHeight="46.0" prefWidth="228.0" spacing="10.0" styleClass="panel-border">
                <children>
-                  <RadioButton mnemonicParsing="false" selected="true" styleClass="fixed-labels" text="Atividade">
+                  <RadioButton fx:id="rbAtividade" mnemonicParsing="false" onMouseClicked="#actToggle" selected="true" styleClass="fixed-labels" text="Atividade">
                      <toggleGroup>
                         <ToggleGroup fx:id="tgFiltro" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton mnemonicParsing="false" styleClass="fixed-labels" text="Aluno" toggleGroup="$tgFiltro" />
-                  <RadioButton mnemonicParsing="false" styleClass="fixed-labels" text="Tudo" toggleGroup="$tgFiltro" />
+                  <RadioButton fx:id="rbAluno" mnemonicParsing="false" onMouseClicked="#actToggle" styleClass="fixed-labels" text="Aluno" toggleGroup="$tgFiltro" />
+                  <RadioButton fx:id="rbTudo" mnemonicParsing="false" onMouseClicked="#actToggle" styleClass="fixed-labels" text="Tudo" toggleGroup="$tgFiltro" />
                </children>
             </HBox>
             <Label layoutX="77.0" layoutY="24.0" styleClass="title-border" text="Selecionar por:" />
             <HBox alignment="CENTER" layoutX="303.0" layoutY="29.0" prefHeight="46.0" prefWidth="283.0" spacing="10.0" styleClass="panel-border">
                <children>
-                  <ComboBox prefHeight="25.0" prefWidth="267.0" />
+                  <ComboBox fx:id="cbFiltros" onAction="#actFiltrar" prefHeight="25.0" prefWidth="267.0" />
                </children>
             </HBox>
             <Label layoutX="314.0" layoutY="24.0" styleClass="title-border" text="Filtrar" />
@@ -53,7 +55,7 @@
                               <Font name="Verdana Bold" size="12.0" />
                            </font>
                         </Label>
-                        <DatePicker fx:id="dtpDe" editable="false" onAction="#carregarGrafico" prefHeight="25.0" prefWidth="200.0" />
+                        <DatePicker fx:id="dtpDe" editable="false" onAction="#actFiltrar" prefHeight="25.0" prefWidth="200.0" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER_RIGHT" prefHeight="61.0" prefWidth="196.0">
@@ -63,7 +65,7 @@
                               <Font name="Verdana Bold" size="12.0" />
                            </font>
                         </Label>
-                        <DatePicker fx:id="dtpAte" editable="false" onAction="#carregarGrafico" prefHeight="25.0" prefWidth="200.0" />
+                        <DatePicker fx:id="dtpAte" editable="false" onAction="#actFiltrar" prefHeight="25.0" prefWidth="200.0" />
                      </children>
                   </VBox>
                </children>
@@ -71,7 +73,7 @@
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </padding>
             </HBox>
-            <Label layoutX="123.0" layoutY="83.0" styleClass="title-border" text="Intervalo">
+            <Label layoutX="143.0" layoutY="84.0" styleClass="title-border" text="Intervalo">
                <font>
                   <Font name="Verdana Bold Italic" size="9.0" />
                </font>
