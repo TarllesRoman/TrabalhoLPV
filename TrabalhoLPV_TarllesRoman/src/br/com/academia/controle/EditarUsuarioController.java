@@ -56,6 +56,12 @@ public class EditarUsuarioController implements Initializable {
 
     @FXML
     private void actAlterar() {
+    	if(usuarioCarregado.getUsuario().equals(Main.usuario.getUsuario()) && usuarioCarregado.getSenha().equals(Main.usuario.getSenha()) &&
+    			usuarioCarregado.getPapel().equals(Main.usuario.getPapel())) {
+    		
+    		AlertHandler.showAlertErro(Main.TITULO, "Impossível atualizar usuário", "Você não pode realizar operações sobre si mesmo");
+    	}
+    	
     	try {
 			boolean ok = AlertHandler.showAlertConfirm(Main.TITULO, "Confirma a atualização dos dados?",
 					"Você deseja realmente alterar as informações de "+ usuarioCarregado.getUsuario() + "?");
@@ -131,6 +137,12 @@ public class EditarUsuarioController implements Initializable {
 
     @FXML
     private void actExcluir(ActionEvent event) {
+    	if(usuarioCarregado.getUsuario().equals(Main.usuario.getUsuario()) && usuarioCarregado.getSenha().equals(Main.usuario.getSenha()) &&
+    			usuarioCarregado.getPapel().equals(Main.usuario.getPapel())) {
+    		
+    		AlertHandler.showAlertErro(Main.TITULO, "Impossível excluir usuário", "Você não pode realizar operações sobre si mesmo");
+    	}
+    	
     	try {
 			boolean ok = AlertHandler.showAlertConfirm(Main.TITULO, "Confirma a exclusão dos dados?",
 					"Você deseja realmente excluir as informações de "+ usuarioCarregado.getUsuario() + "?");
