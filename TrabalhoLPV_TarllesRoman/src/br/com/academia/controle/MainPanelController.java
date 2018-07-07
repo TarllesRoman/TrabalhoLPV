@@ -23,6 +23,7 @@ import br.com.academia.utils.ChartFactory;
 import br.com.academia.utils.ChartFactory.DataSetTypes;
 import br.com.academia.utils.FileImporter;
 import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -33,6 +34,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioButton;
@@ -49,11 +51,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.converter.LocalDateStringConverter;
 
 public class MainPanelController implements Initializable{
 	//Variáveis referentes a área 0. Área 0 == menu superior
-	@FXML private MenuItem miImportarEF;
+	@FXML private MenuItem miImportarEF, miAluno, miAtividade, miUsuarios;
+	@FXML  private Menu mComparar;
 
 	//Variáveis referentes a área 2. Área 2 == canto médio esquerdo
 	@FXML private TextField tfAluno;
@@ -98,7 +102,26 @@ public class MainPanelController implements Initializable{
 			cbGraficos.setItems(FXCollections.observableArrayList(DataSetTypes.getNomes()));
 			cbGraficos.getSelectionModel().select(0);
 
+			if(Main.usuario.getPapel().equals("Administrador"))
+				miUsuarios.setVisible(true);
+			else
+				miUsuarios.setVisible(false);
+			
 			alunos = AlunoDAO.selecionar(Main.conexao);
+			
+			if(alunos.isEmpty()) {
+				lblNaoEncontrado.setText("Nenhum cliente encontrado");
+				lblNaoEncontrado.setVisible(true);
+				miAluno.setDisable(true);
+				miAtividade.setDisable(true);
+				mComparar.setDisable(true);
+				return;
+			}else {
+				lblNaoEncontrado.setVisible(false);
+				miAluno.setDisable(false);
+				miAtividade.setDisable(false);
+				mComparar.setDisable(false);
+			}
 
 			List<String> autoCompleteStrings = new ArrayList<>();
 			for(Aluno a : alunos) {
@@ -110,13 +133,7 @@ public class MainPanelController implements Initializable{
 
 			acb = TextFields.bindAutoCompletion(tfAluno, autoCompleteStrings);
 
-			if(autoCompleteStrings.isEmpty()) {
-				lblNaoEncontrado.setText("Nenhum cliente encontrado");
-				lblNaoEncontrado.setVisible(true);
-				return;
-			}else {
-				lblNaoEncontrado.setVisible(false);
-			}
+			
 
 			tfAluno.setText(autoCompleteStrings.get(0));
 			alunoCarregado = alunos.get(0);
@@ -288,9 +305,55 @@ public class MainPanelController implements Initializable{
 	}
 
 	@FXML
-	private void sair() {
-		System.out.println("bye");
-	}
+    void actSair() {
+		boolean ok = AlertHandler.showAlertConfirm(Main.TITULO, "Deseja reamente sair?",
+				"Você realmente quer realizar o logout na aplicação?");
+    	
+    	if(!ok) return;
+    	
+		try {
+			Main.usuario = null;
+			
+			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/Login.fxml"));
+			Scene scene = new Scene(root,359,182);
+			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
+			
+			Stage loginStage = new Stage(); 
+			
+			loginStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent event) {
+					try {
+						if(Main.usuario == null)
+							Main.conexao.close();
+					} catch (SQLException e) {
+					}
+				}
+			});
+			
+			loginStage.centerOnScreen();
+			loginStage.setTitle(Main.TITULO + ": Login");
+			loginStage.setResizable(false);
+			loginStage.setScene(scene);
+			loginStage.show();
+			
+			((Stage)tfAluno.getScene().getWindow()).close();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+    }
+
+    @FXML
+    void actSairEFechar() {
+    	boolean ok = AlertHandler.showAlertConfirm(Main.TITULO, "Deseja reamente sair?",
+				"Você realmente quer sair e encerrar a aplicação?");
+    	
+    	if(!ok) return;
+    	
+    	Main.usuario = null;
+    	((Stage)tfAluno.getScene().getWindow()).close();
+    }
 
 	@FXML
 	private void onactRecordes() {
