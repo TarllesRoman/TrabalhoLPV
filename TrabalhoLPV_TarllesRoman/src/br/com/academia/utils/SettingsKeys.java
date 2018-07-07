@@ -23,7 +23,7 @@ public enum SettingsKeys {
 	REGEX_TEMPO_ATIVIDADE("Tempo: [0-9]{2}:[0-9]{2} - [0-9]{2}:[0-9]{2}"),
 	REGEX_DURACAO("Duração: [0-9]{2}:[0-9]{2}:[0-9]{2}"),
 	REGEX_DISTANCIA("Distância: ([0-9|\\.]+),([0-9]+) Km"),
-	REGEX_CALORIAS_PERDIDAS("Calorias perdidas: ([0-9|\\.]+) Kcal"),
+	REGEX_CALORIAS_PERDIDAS("Calorias perdidas: ([0-9|\\.|,]+) Kcal"),
 	REGEX_PASSOS("Passos: ([0-9]|\\.)+"),
 	REGEX_VELOCIDADE_MEDIA("Velocidade média: [0-9]+,[0-9]+ Km/h"),
 	REGEX_VELOCIDADE_MAXIMA("Velocidade máxima: [0-9]+,[0-9]+ Km/h"),

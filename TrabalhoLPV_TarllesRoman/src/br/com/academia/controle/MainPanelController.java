@@ -213,6 +213,9 @@ public class MainPanelController implements Initializable{
 			stageEditAluno.setResizable(false);
 			stageEditAluno.setScene(scene);
 			stageEditAluno.showAndWait();
+			
+			initialize(null, null);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -233,6 +236,9 @@ public class MainPanelController implements Initializable{
 			stageEditAluno.setResizable(false);
 			stageEditAluno.setScene(scene);
 			stageEditAluno.showAndWait();
+			
+			initialize(null, null);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -253,8 +259,6 @@ public class MainPanelController implements Initializable{
 			stageEditAluno.setResizable(false);
 			stageEditAluno.setScene(scene);
 			stageEditAluno.showAndWait();
-			
-			initialize(null, null);
 			
 		} catch(Exception e) {
 			e.printStackTrace();

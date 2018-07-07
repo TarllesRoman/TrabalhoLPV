@@ -34,6 +34,17 @@ public class AtividadeDAO {
 		state.close();
 	}
 	
+	public static void remover(Atividade atividade, Connection con) throws SQLException{
+		String sql = "DELETE FROM public.atividade WHERE id=?";
+		
+		PreparedStatement state = con.prepareStatement(sql);
+		
+		state.setInt(1, atividade.getId());
+
+		state.execute();
+		state.close();
+	}
+	
 	/**Recupera todas as atividades desse aluno*/
 	public static ArrayList<Atividade> selecionar(Aluno aluno, Connection con) throws SQLException{
 		String sql = "SELECT id, data, tempo, atividade, duracao, distancia, calorias, passos"

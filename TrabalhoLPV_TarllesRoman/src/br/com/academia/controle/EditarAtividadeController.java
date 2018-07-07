@@ -152,12 +152,15 @@ public class EditarAtividadeController implements Initializable{
 			
 			Stage stageEditAluno = new Stage();
 			
-			stageEditAluno.setTitle(Main.TITULO + ": Editar Aluno");
+			stageEditAluno.setTitle(Main.TITULO + ": Detalhes Atividade");
 			stageEditAluno.centerOnScreen();
 			stageEditAluno.initModality(Modality.APPLICATION_MODAL);
 			stageEditAluno.setResizable(false);
 			stageEditAluno.setScene(scene);
 			stageEditAluno.showAndWait();
+			
+			initialize(null, null);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

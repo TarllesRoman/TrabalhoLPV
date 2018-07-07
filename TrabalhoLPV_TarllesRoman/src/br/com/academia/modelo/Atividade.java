@@ -105,11 +105,12 @@ public class Atividade {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("------ Detalhes do exercício ------");
+		sb.append("\nExercício: "+atividade);
 		sb.append("\nData: " + Main.sdf.format(data));
 		sb.append("\nTempo: "+tempo);
 		sb.append("\nDuração: "+HourHandle.doubleToMinutes(duracao));
 		sb.append("\nDistância: "+String.format("%.2f Km", distancia));
-		sb.append("\nCalorias Perdidas: "+String.format("%.2f Kcal", calorias));
+		sb.append("\nCalorias perdidas: "+String.format("%.2f Kcal", calorias));
 		sb.append("\nPassos: "+passos);
 		
 		return sb.toString();
