@@ -73,18 +73,20 @@ public class EditarAlunoController implements Initializable {
 	}
 
 	private void carregarAluno() {
-		//Coloca os atributos do cliente em seus lugares na cena
-		tfNome.setText(alunoCarregado.getNome());
-		tfSexo.setText(alunoCarregado.getSexo());
-		tfPeso.setText( String.format("%.2f", alunoCarregado.getPeso()).replace(",", ".") );
-		tfAltura.setText( String.format("%.2f", alunoCarregado.getAltura()).replace(",", ".") );
-		tfCPF.setText(alunoCarregado.getCpf());
-		tfWPP.setText(alunoCarregado.getWhatsapp());
+		try {
+			//Coloca os atributos do cliente em seus lugares na cena
+			tfNome.setText(alunoCarregado.getNome());
+			tfSexo.setText(alunoCarregado.getSexo());
+			tfPeso.setText( String.format("%.2f", alunoCarregado.getPeso()).replace(",", ".") );
+			tfAltura.setText( String.format("%.2f", alunoCarregado.getAltura()).replace(",", ".") );
+			tfCPF.setText(alunoCarregado.getCpf());
+			tfWPP.setText(alunoCarregado.getWhatsapp());
 
-		String strDate = Main.sdf.format( alunoCarregado.getDataNascimento() );
-		dpNascimento.setValue(new LocalDateStringConverter().fromString(strDate) );
+			String strDate = Main.sdf.format( alunoCarregado.getDataNascimento() );
+			dpNascimento.setValue(new LocalDateStringConverter().fromString(strDate) );
 
-		tfEmail.setText(alunoCarregado.getEmail());
+			tfEmail.setText(alunoCarregado.getEmail());
+		}catch(Exception e) {}
 	}
 
 	@FXML

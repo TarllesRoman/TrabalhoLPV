@@ -36,6 +36,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -59,7 +60,7 @@ public class MainPanelController implements Initializable{
 	
 	//Variaveis referentes a area 3. Área 3 == cando inferior esquerdo
 	@FXML private TableView<Atividade> tbvAtividades;
-	@FXML private Button btnRelatorio;
+	@FXML private Button btnRecordes;
 	@FXML private Pagination pgTabela;
 
 	//Variáveis referentes a área 4. Área 4 == canto superior direito
@@ -72,6 +73,9 @@ public class MainPanelController implements Initializable{
 	private Aluno alunoCarregado;
 	private List<Atividade> atividades;
 	private AutoCompletionBinding<String> acb = null;
+	
+	private DataSetTypes recordes[] = {DataSetTypes.DURACAO_DE_EXERCICIOS, DataSetTypes.DISTANCIA_PERCORRIDA,
+								 DataSetTypes.CALORIAS_PERDIDAS, DataSetTypes.PASSOS_DADOS, DataSetTypes.VELOCIDADE_MAXIMA};
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -147,7 +151,31 @@ public class MainPanelController implements Initializable{
 		int index = tbvAtividades.getSelectionModel().getSelectedIndex() + (Main.ITENS_POR_PAGINA * pgTabela.getCurrentPageIndex());
 		Atividade atvSelecionada = atividades.get(index);
 		
-		AlertHandler.showAlertConfirm("", "", "Funcionou?");
+		try {
+			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/TextAreaDetalhes.fxml"));
+			Scene scene = new Scene(root,420,314);
+			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
+			Stage stageDetalhes = new Stage();
+			
+			for(Node n : root.getChildren()) {
+				if(n.getId() == null)continue;
+				if(n.getId().equals("taDetalhes")) {
+					TextArea ta = ((TextArea) n);
+					ta.setText(atvSelecionada.toString());
+					break;
+				}
+			}
+			
+			stageDetalhes.setTitle(Main.TITULO + ": Detalhes");
+			stageDetalhes.centerOnScreen();
+			stageDetalhes.initModality(Modality.APPLICATION_MODAL);
+			stageDetalhes.setResizable(false);
+			stageDetalhes.setScene(scene);
+			stageDetalhes.showAndWait();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML
@@ -216,9 +244,7 @@ public class MainPanelController implements Initializable{
 			
 			initialize(null, null);
 			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		} catch(Exception e) {	}
 	}
 	
 	@FXML
@@ -228,20 +254,18 @@ public class MainPanelController implements Initializable{
 			Scene scene = new Scene(root,669,386);
 			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
 			
-			Stage stageEditAluno = new Stage();
+			Stage stageEditAtividade = new Stage();
 			
-			stageEditAluno.setTitle(Main.TITULO + ": Editar Aluno");
-			stageEditAluno.centerOnScreen();
-			stageEditAluno.initModality(Modality.APPLICATION_MODAL);
-			stageEditAluno.setResizable(false);
-			stageEditAluno.setScene(scene);
-			stageEditAluno.showAndWait();
+			stageEditAtividade.setTitle(Main.TITULO + ": Editar Aluno");
+			stageEditAtividade.centerOnScreen();
+			stageEditAtividade.initModality(Modality.APPLICATION_MODAL);
+			stageEditAtividade.setResizable(false);
+			stageEditAtividade.setScene(scene);
+			stageEditAtividade.showAndWait();
 			
 			initialize(null, null);
 			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		} catch(Exception e) {	}
 	}
 	
 	@FXML
@@ -251,23 +275,67 @@ public class MainPanelController implements Initializable{
 			Scene scene = new Scene(root,435,225);
 			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
 			
-			Stage stageEditAluno = new Stage();
+			Stage stageEditUsuarios = new Stage();
 			
-			stageEditAluno.setTitle(Main.TITULO + ": Editar Usuários");
-			stageEditAluno.centerOnScreen();
-			stageEditAluno.initModality(Modality.APPLICATION_MODAL);
-			stageEditAluno.setResizable(false);
-			stageEditAluno.setScene(scene);
-			stageEditAluno.showAndWait();
+			stageEditUsuarios.setTitle(Main.TITULO + ": Editar Usuários");
+			stageEditUsuarios.centerOnScreen();
+			stageEditUsuarios.initModality(Modality.APPLICATION_MODAL);
+			stageEditUsuarios.setResizable(false);
+			stageEditUsuarios.setScene(scene);
+			stageEditUsuarios.showAndWait();
 			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		} catch(Exception e) {	}
 	}
 	
 	@FXML
-	public void sair() {
+	private void sair() {
 		System.out.println("bye");
+	}
+	
+	@FXML
+	private void onactRecordes() {
+		try {
+			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/TextAreaDetalhes.fxml"));
+			Scene scene = new Scene(root,420,314);
+			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
+			Stage stageDetalhes = new Stage();
+			
+			TextArea ta = null;
+			for(Node n : root.getChildren()) {
+				if(n.getId() == null)continue;
+				if(n.getId().equals("taDetalhes")) {
+					ta = ((TextArea) n);
+					break;
+				}
+			}
+			
+			if(ta==null)return;
+			
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append("De todos os exercícios de " + alunoCarregado.getNome() + " o que pussui o(a):\n\n");
+			
+			Atividade atv;
+			String s;
+			for(DataSetTypes dt : recordes) {
+				atv = AtividadeDAO.selecionarMaiorValor(Main.conexao, alunoCarregado, dt);
+				s = AtividadeDAO.obterDescricao(dt);
+				if(atv != null)
+					sb.append(s+": "+dt.getValorCorrespondente(atv) + " - " + atv.getAtividade() + " - " + Main.sdf.format(atv.getData()) + "\n" );
+				else
+					sb.append(s+": nenhum valor encontrado\n");
+			}
+			
+			ta.setText(sb.toString());
+			
+			stageDetalhes.setTitle(Main.TITULO + ": Detalhes");
+			stageDetalhes.centerOnScreen();
+			stageDetalhes.initModality(Modality.APPLICATION_MODAL);
+			stageDetalhes.setResizable(false);
+			stageDetalhes.setScene(scene);
+			stageDetalhes.showAndWait();
+			
+		} catch(Exception e) {	}
 	}
 	
 	private Node createPage(int pageIndex) {

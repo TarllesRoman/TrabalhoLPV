@@ -117,7 +117,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Button fx:id="btnRelatorio" layoutX="229.0" layoutY="597.0" mnemonicParsing="false" text="Relatório de Exercícios">
+      <Button fx:id="btnRecordes" layoutX="269.0" layoutY="589.0" mnemonicParsing="false" onAction="#onactRecordes" text="Exibir Recordes">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

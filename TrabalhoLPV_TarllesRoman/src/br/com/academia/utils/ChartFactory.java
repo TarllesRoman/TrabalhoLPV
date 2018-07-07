@@ -153,6 +153,8 @@ public class ChartFactory {
 		 */
 		VELOCIDADE_MEDIA("Velocidade Média","Datas","Velocidade Média (Km/h)"),
 		
+		VELOCIDADE_MAXIMA("Velocidade Máxima","Datas","Velocidade Máxima (Km/h)"),
+		
 		/**Para todos os exercicios realizados no período estipulado obtém o ritmo médio e o adiciona ao DataSet
 		 * Os valores exibidos no gráfico são agrupados por dia e exercícios feitos no mesmo dia são agrupados na mesma coluna.
 		 */
@@ -228,6 +230,9 @@ public class ChartFactory {
 			
 			if(this == VELOCIDADE_MEDIA && ((AtividadeCompleta) obj).getVelocidadeMedia() > 0) 
 				return (double) ((AtividadeCompleta) obj).getVelocidadeMedia();
+			
+			if(this == VELOCIDADE_MAXIMA && ((AtividadeCompleta) obj).getVelocidadeMaxima() > 0) 
+				return (double) ((AtividadeCompleta) obj).getVelocidadeMaxima();
 			
 			if(this == RITMO_MEDIO && ((AtividadeCompleta) obj).getRitmoMedio() > 0) 
 				return ((AtividadeCompleta) obj).getRitmoMedio();
