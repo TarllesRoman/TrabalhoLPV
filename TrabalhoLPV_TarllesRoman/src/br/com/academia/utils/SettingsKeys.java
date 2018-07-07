@@ -13,7 +13,7 @@ public enum SettingsKeys {
 	SEPARATOR_VALUES(" ; "),
 	
 	REGEX_NAME_EXERCICIO("Exercício: ([^\\n]+)"),
-	REGEX_NAME_ALUNO("Nome: ([a-zA-Z]| )+"),
+	REGEX_NAME_ALUNO("Nome: [^\n]+"),
 	REGEX_SEXO("Sexo: ([mM]asculino|[fF]eminino)"),
 	REGEX_ALTURA("Altura: ([0-9]+),([0-9]+) m"),
 	REGEX_PESO("Peso: ([0-9]+),([0-9]+) Kg"),
