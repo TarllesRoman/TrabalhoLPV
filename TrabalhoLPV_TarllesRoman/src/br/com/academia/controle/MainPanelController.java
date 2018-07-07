@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.controlsfx.control.textfield.AutoCompletionBinding;
@@ -48,6 +49,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.converter.LocalDateStringConverter;
 
 public class MainPanelController implements Initializable{
 	//Variáveis referentes a área 0. Área 0 == menu superior
@@ -57,7 +59,7 @@ public class MainPanelController implements Initializable{
 	@FXML private TextField tfAluno;
 	@FXML private Button btnBuscar;
 	@FXML private Label lblNome, lblSexo, lblPeso, lblAltura, lblDataN, lblEmail, lblNaoEncontrado;
-	
+
 	//Variaveis referentes a area 3. Área 3 == cando inferior esquerdo
 	@FXML private TableView<Atividade> tbvAtividades;
 	@FXML private Button btnRecordes;
@@ -69,26 +71,28 @@ public class MainPanelController implements Initializable{
 	@FXML private ComboBox<String> cbGraficos, cbExercicios;
 	@FXML private DatePicker dtpDe, dtpAte;
 
+	//Variáveis referentes a área 5. Área 5 == canto inferior direito
+	@FXML private Label lblPassTotal, lblPassMedia, lblDistMedia, lblDistTotal, lblCalMedia, lblCalTotal;
+
 	private List<Aluno> alunos;
 	private Aluno alunoCarregado;
 	private List<Atividade> atividades;
 	private AutoCompletionBinding<String> acb = null;
-	
+
 	private DataSetTypes recordes[] = {DataSetTypes.DURACAO_DE_EXERCICIOS, DataSetTypes.DISTANCIA_PERCORRIDA,
-								 DataSetTypes.CALORIAS_PERDIDAS, DataSetTypes.PASSOS_DADOS, DataSetTypes.VELOCIDADE_MAXIMA};
+			DataSetTypes.CALORIAS_PERDIDAS, DataSetTypes.PASSOS_DADOS, DataSetTypes.VELOCIDADE_MAXIMA};
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		try {
 			limparTela();
-			
+
 			atividades = new ArrayList<>();
-			
+
 			tbvAtividades.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("atividade"));
 			tbvAtividades.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("data"));
-			
-			dtpDe.getEditor().setText(Main.sdf.format(new Date().getTime() - 6.048e+8));
-			dtpAte.getEditor().setText(Main.sdf.format(new Date()));
+
+			ajustarIntervalo();
 
 			//setando tipos gráficos
 			cbGraficos.setItems(FXCollections.observableArrayList(DataSetTypes.getNomes()));
@@ -100,10 +104,10 @@ public class MainPanelController implements Initializable{
 			for(Aluno a : alunos) {
 				autoCompleteStrings.add(a.getNome() + " - " + a.getEmail());
 			}
-			
+
 			if(acb != null)
 				acb.dispose();
-			
+
 			acb = TextFields.bindAutoCompletion(tfAluno, autoCompleteStrings);
 
 			if(autoCompleteStrings.isEmpty()) {
@@ -113,31 +117,29 @@ public class MainPanelController implements Initializable{
 			}else {
 				lblNaoEncontrado.setVisible(false);
 			}
-			
+
 			tfAluno.setText(autoCompleteStrings.get(0));
 			alunoCarregado = alunos.get(0);
-			
+
 			onactCarregar();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	@FXML
 	private void onactCarregar() {
 		try {
 			limparTela();
-			
+
 			alunoCarregado = AlunoDAO.selecionar(Main.conexao,
-							tfAluno.getText().split(" - ")[1]);
-			
+					tfAluno.getText().split(" - ")[1]);
+
 			carregarAluno();
 			carregarGrafico();
 			pullExercicios();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 			AlertHandler.showAlertErro(Main.TITULO, "Usuário não encontrado", "Experimente usar o auto-complete");	
 		}
 	}
@@ -145,18 +147,18 @@ public class MainPanelController implements Initializable{
 	@FXML
 	private void requestAtividade(MouseEvent event) {
 		if(tbvAtividades.getSelectionModel().getSelectedIndex() < 0) return;
-		
+
 		if( !event.getButton().equals(MouseButton.PRIMARY) || event.getClickCount() != 2) return;
-		
+
 		int index = tbvAtividades.getSelectionModel().getSelectedIndex() + (Main.ITENS_POR_PAGINA * pgTabela.getCurrentPageIndex());
 		Atividade atvSelecionada = atividades.get(index);
-		
+
 		try {
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/TextAreaDetalhes.fxml"));
 			Scene scene = new Scene(root,420,314);
 			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
 			Stage stageDetalhes = new Stage();
-			
+
 			for(Node n : root.getChildren()) {
 				if(n.getId() == null)continue;
 				if(n.getId().equals("taDetalhes")) {
@@ -165,46 +167,81 @@ public class MainPanelController implements Initializable{
 					break;
 				}
 			}
-			
+
 			stageDetalhes.setTitle(Main.TITULO + ": Detalhes");
 			stageDetalhes.centerOnScreen();
 			stageDetalhes.initModality(Modality.APPLICATION_MODAL);
 			stageDetalhes.setResizable(false);
 			stageDetalhes.setScene(scene);
 			stageDetalhes.showAndWait();
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+
+		} catch(Exception e) {	}
 	}
-	
+
 	@FXML
 	private void carregarGrafico() {
 		limparGrafico();
+		limparArea5();
+
+		if(  dtpDe.getValue().isAfter(dtpAte.getValue()) ||  dtpDe.getValue().isEqual(dtpAte.getValue()) ) {
+			ajustarIntervalo();
+		}
 
 		DataSetTypes typeDataSet = DataSetTypes.searchDataSetType(cbGraficos.getSelectionModel().getSelectedItem());
 		if(typeDataSet == null) return;
 		try {
-			String atividade = (cbExercicios.getSelectionModel().getSelectedIndex() > 0)?
-								cbExercicios.getSelectionModel().getSelectedItem() : null;
-			
+			String atividade = (cbExercicios.getSelectionModel().getSelectedIndex() > 0)? cbExercicios.getSelectionModel().getSelectedItem() : null;
+
+			List<Atividade> dataSet = AtividadeDAO.selecionar(
+					alunoCarregado,
+					new java.sql.Date( Main.sdf.parse(dtpDe.getEditor().getText()).getTime() ),
+					new java.sql.Date( Main.sdf.parse(dtpAte.getEditor().getText()).getTime() ),
+					Main.conexao);
+
 			Chart chart;
 			if( ((RadioButton)tgTiposGraficos.getSelectedToggle()).getText().equals("Colunas") ) {
-				chart = ChartFactory.createBarChart(AtividadeDAO.selecionar(
-						alunoCarregado,
-						new java.sql.Date( Main.sdf.parse(dtpDe.getEditor().getText()).getTime() ),
-						new java.sql.Date( Main.sdf.parse(dtpAte.getEditor().getText()).getTime() ),
-						Main.conexao),	typeDataSet, atividade);
+				chart = ChartFactory.createBarChart(dataSet,	typeDataSet, atividade);
 			}else {
-				chart = ChartFactory.createLineChart(AtividadeDAO.selecionar(
-						alunoCarregado,
-						new java.sql.Date( Main.sdf.parse(dtpDe.getEditor().getText()).getTime() ),
-						new java.sql.Date( Main.sdf.parse(dtpAte.getEditor().getText()).getTime() ),
-						Main.conexao),	typeDataSet, atividade);
+				chart = ChartFactory.createLineChart(dataSet,	typeDataSet, atividade);
 			}
 
 			paneGrafico.getChildren().add(chart);
-			
+
+			Map<String, Double> statictics = ChartFactory.createStatistics(dataSet); 
+			if(statictics == null) return;
+
+			for(String s : statictics.keySet()) {
+				if(s.equals("totalPassos")) {
+					lblPassTotal.setText(String.format("%d", statictics.get(s).intValue() ));
+					continue;
+				}
+
+				if(s.equals("mediaPassos")) {
+					lblPassMedia.setText(String.format("%d", statictics.get(s).intValue() ));
+					continue;
+				}
+
+				if(s.equals("totalDistancia")) {
+					lblDistTotal.setText(String.format("%.2f", statictics.get(s)));
+					continue;
+				}
+
+				if(s.equals("mediaDistancia")) {
+					lblDistMedia.setText(String.format("%.2f", statictics.get(s)));
+					continue;
+				}
+
+				if(s.equals("totalCalorias")) {
+					lblCalTotal.setText(String.format("%.2f", statictics.get(s)));
+					continue;
+				}
+
+				if(s.equals("mediaCalorias")) {
+					lblCalMedia.setText(String.format("%.2f", statictics.get(s)));
+					continue;
+				}
+			}
+
 		}catch(SQLException | ParseException | NullPointerException e) {	}
 	}
 
@@ -225,73 +262,73 @@ public class MainPanelController implements Initializable{
 		if(files == null) return; //janela foi fechada
 		importarArquivos(files);
 	}//acao importar
-	
+
 	@FXML
 	private void onactEditarAluno() {
 		try {
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/EditarAluno.fxml"));
 			Scene scene = new Scene(root,440,406);
 			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
-			
+
 			Stage stageEditAluno = new Stage();
-			
+
 			stageEditAluno.setTitle(Main.TITULO + ": Editar Aluno");
 			stageEditAluno.centerOnScreen();
 			stageEditAluno.initModality(Modality.APPLICATION_MODAL);
 			stageEditAluno.setResizable(false);
 			stageEditAluno.setScene(scene);
 			stageEditAluno.showAndWait();
-			
+
 			initialize(null, null);
-			
+
 		} catch(Exception e) {	}
 	}
-	
+
 	@FXML
 	private void onactEditarAtividade() {
 		try {
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/EditarAtividade.fxml"));
 			Scene scene = new Scene(root,669,386);
 			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
-			
+
 			Stage stageEditAtividade = new Stage();
-			
+
 			stageEditAtividade.setTitle(Main.TITULO + ": Editar Aluno");
 			stageEditAtividade.centerOnScreen();
 			stageEditAtividade.initModality(Modality.APPLICATION_MODAL);
 			stageEditAtividade.setResizable(false);
 			stageEditAtividade.setScene(scene);
 			stageEditAtividade.showAndWait();
-			
+
 			initialize(null, null);
-			
+
 		} catch(Exception e) {	}
 	}
-	
+
 	@FXML
 	private void onactEditarUsuarios() {
 		try {
 			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/EditarUsuario.fxml"));
 			Scene scene = new Scene(root,435,225);
 			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
-			
+
 			Stage stageEditUsuarios = new Stage();
-			
+
 			stageEditUsuarios.setTitle(Main.TITULO + ": Editar Usuários");
 			stageEditUsuarios.centerOnScreen();
 			stageEditUsuarios.initModality(Modality.APPLICATION_MODAL);
 			stageEditUsuarios.setResizable(false);
 			stageEditUsuarios.setScene(scene);
 			stageEditUsuarios.showAndWait();
-			
+
 		} catch(Exception e) {	}
 	}
-	
+
 	@FXML
 	private void sair() {
 		System.out.println("bye");
 	}
-	
+
 	@FXML
 	private void onactRecordes() {
 		try {
@@ -299,7 +336,7 @@ public class MainPanelController implements Initializable{
 			Scene scene = new Scene(root,420,314);
 			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
 			Stage stageDetalhes = new Stage();
-			
+
 			TextArea ta = null;
 			for(Node n : root.getChildren()) {
 				if(n.getId() == null)continue;
@@ -308,13 +345,13 @@ public class MainPanelController implements Initializable{
 					break;
 				}
 			}
-			
+
 			if(ta==null)return;
-			
+
 			StringBuilder sb = new StringBuilder();
-			
+
 			sb.append("De todos os exercícios de " + alunoCarregado.getNome() + " o que pussui o(a):\n\n");
-			
+
 			Atividade atv;
 			String s;
 			for(DataSetTypes dt : recordes) {
@@ -325,28 +362,28 @@ public class MainPanelController implements Initializable{
 				else
 					sb.append(s+": nenhum valor encontrado\n");
 			}
-			
+
 			ta.setText(sb.toString());
-			
+
 			stageDetalhes.setTitle(Main.TITULO + ": Detalhes");
 			stageDetalhes.centerOnScreen();
 			stageDetalhes.initModality(Modality.APPLICATION_MODAL);
 			stageDetalhes.setResizable(false);
 			stageDetalhes.setScene(scene);
 			stageDetalhes.showAndWait();
-			
+
 		} catch(Exception e) {	}
 	}
-	
+
 	private Node createPage(int pageIndex) {
 		int from = pageIndex * Main.ITENS_POR_PAGINA,
-			to = Math.min(from + Main.ITENS_POR_PAGINA, atividades.size());
-		
+				to = Math.min(from + Main.ITENS_POR_PAGINA, atividades.size());
+
 		tbvAtividades.setItems(FXCollections.observableArrayList(atividades.subList(from, to)));
-		
+
 		return tbvAtividades;
 	}
-	
+
 	private void carregarAluno() {
 		limparArea2();
 
@@ -358,11 +395,11 @@ public class MainPanelController implements Initializable{
 		lblDataN.setText(Main.sdf.format( alunoCarregado.getDataNascimento() ));
 		lblEmail.setText(alunoCarregado.getEmail());
 	}
-	
+
 	private void pullExercicios() {
 		try {
 			atividades = AtividadeDAO.selecionar(alunoCarregado, Main.conexao);
-			
+
 			ArrayList<String> aux = new ArrayList<>();
 			aux.add("Todos os exercícios");
 			for(Atividade a : atividades) {
@@ -371,10 +408,15 @@ public class MainPanelController implements Initializable{
 			}
 			cbExercicios.setItems(FXCollections.observableArrayList(aux));
 			cbExercicios.getSelectionModel().select(0);
-			
+
+			if(atividades.size() == 0 ) {
+				pgTabela.setPageCount(1);
+				pgTabela.setPageFactory(this::createPage);
+				return;
+			}
 			pgTabela.setPageCount( (atividades.size()%4 > 0)? (atividades.size()/4+1) : atividades.size()/4 );
 			pgTabela.setPageFactory(this::createPage);
-			
+
 		} catch (SQLException e) {	}
 	}
 
@@ -409,11 +451,23 @@ public class MainPanelController implements Initializable{
 		initialize(null, null);
 	}
 
+	private void ajustarIntervalo() {
+		dtpDe.getEditor().setText(Main.sdf.format(new Date().getTime() - 6.048e+8));
+		dtpAte.getEditor().setText(Main.sdf.format(new Date()));
+
+		String strDate = Main.sdf.format( new Date().getTime() - 6.048e+8 );
+		dtpDe.setValue(new LocalDateStringConverter().fromString(strDate));
+		dtpAte.setValue( new LocalDateStringConverter().fromString( Main.sdf.format(new Date()) ) );
+	}
+
 	/**Altera todos os labels de informações para o valor: "-" e retira o gráfico do pane */
 	private void limparTela() {
 		limparArea2();
 		limparGrafico();
+		limparArea5();
 		alunoCarregado = null;
+		pgTabela.setPageCount(1);
+		tbvAtividades.setItems(FXCollections.observableArrayList());
 	}
 
 	//idem ao limparTela mas apenas para área 2
@@ -429,6 +483,16 @@ public class MainPanelController implements Initializable{
 	//idem ao limparTela mas apenas para área do gráfico	
 	private void limparGrafico() {
 		paneGrafico.getChildren().clear();
+	}
+
+	//idem ao limparTela mas apenas para área 5
+	private void limparArea5(){
+		lblDistMedia.setText("-");
+		lblDistTotal.setText("-");
+		lblCalMedia.setText("-");
+		lblCalTotal.setText("-");
+		lblPassTotal.setText("-");
+		lblPassMedia.setText("-");
 	}
 
 	/**Concatena o array list, no string builder. Strings serão separadas por ', ' e terminadas em '.'*/

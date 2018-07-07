@@ -123,6 +123,8 @@ public class EditarAtividadeController implements Initializable{
 
 	@FXML
 	private void actFiltrar() {
+		atividades = null;
+		
 		if(tgFiltro.getSelectedToggle() == rbTudo) {
 			carregarTudo();
 		}
@@ -180,6 +182,10 @@ public class EditarAtividadeController implements Initializable{
 						Main.conexao);
 			}
 		
+			if(atividades.size() == 0 ) {
+				pgTabela.setPageCount(1);
+				return;
+			}
 			pgTabela.setPageCount( (atividades.size()%4 > 0)? (atividades.size()/4+1) : atividades.size()/4 );
 			pgTabela.setPageFactory(this::createPage);
 		} catch (SQLException | ParseException | IndexOutOfBoundsException e) {	}
@@ -199,6 +205,10 @@ public class EditarAtividadeController implements Initializable{
 						Main.conexao);
 			}
 		
+			if(atividades.size() == 0 ) {
+				pgTabela.setPageCount(1);
+				return;
+			}
 			pgTabela.setPageCount( (atividades.size()%4 > 0)? (atividades.size()/4+1) : atividades.size()/4 );
 			pgTabela.setPageFactory(this::createPage);
 		} catch (SQLException | ParseException e) {	}
@@ -207,7 +217,11 @@ public class EditarAtividadeController implements Initializable{
 	private void carregarTudo() {
 		try {
 			atividades = AtividadeDAO.selecionar(Main.conexao);
-		
+			
+			if(atividades.size() == 0 ) {
+				pgTabela.setPageCount(1);
+				return;
+			}
 			pgTabela.setPageCount( (atividades.size()%4 > 0)? (atividades.size()/4+1) : atividades.size()/4 );
 			pgTabela.setPageFactory(this::createPage);
 		} catch (SQLException e) {	}
