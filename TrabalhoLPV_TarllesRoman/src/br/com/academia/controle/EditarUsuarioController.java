@@ -92,7 +92,7 @@ public class EditarUsuarioController implements Initializable {
 			carregarUsuario();
     		disableAltExc(false);
     		btnCadastrar.setDisable(true);
-		} catch (NumberFormatException e) {
+		} catch (IndexOutOfBoundsException e) {
 			AlertHandler.showAlertErro(Main.TITULO, "Usuário não encontrado", "Para inserir esse aluno importe um exercício do mesmo");
 			limpar();
 			disableAltExc(true);

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+
+<AnchorPane prefHeight="545.0" prefWidth="869.0" styleClass="anchor" stylesheets="@DefaultCSS.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/9.0.1" fx:controller="br.com.academia.controle.CompararAlunosController">
+   <children>
+      <Pane prefHeight="200.0" prefWidth="200.0" styleClass="panel-border" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="15.0">
+         <children>
+            <Label layoutX="349.0" layoutY="-9.0" styleClass="title-large-border" text="Comparar alunos" />
+            <Label layoutX="179.0" layoutY="27.0" styleClass="fixed-labels" text="Comparar os alunos:" />
+            <Label layoutX="179.0" layoutY="61.0" prefHeight="17.0" prefWidth="26.0" styleClass="fixed-labels" text="em:" />
+            <ComboBox fx:id="cbAtividades" layoutX="212.0" layoutY="57.0" onAction="#actCarregar" prefHeight="25.0" prefWidth="178.0" />
+            <CheckBox disable="true" layoutX="398.0" layoutY="61.0" mnemonicParsing="false" selected="true" styleClass="fixed-labels" text="Utilizando apenas os maiores valores" />
+            <Label layoutX="179.0" layoutY="100.0" styleClass="fixed-labels" text="entre as datas de:" />
+            <DatePicker fx:id="dpDe" layoutX="306.0" layoutY="95.0" onAction="#actCarregar" prefHeight="25.0" prefWidth="161.0" />
+            <Label layoutX="476.0" layoutY="99.0" prefHeight="17.0" prefWidth="33.0" styleClass="fixed-labels" text="até:" />
+            <DatePicker fx:id="dpAte" layoutX="509.0" layoutY="95.0" onAction="#actCarregar" prefHeight="25.0" prefWidth="161.0" />
+            <Pane fx:id="paneGrafico" layoutX="6.0" layoutY="130.0" prefHeight="384.0" prefWidth="836.0" />
+            <SplitMenuButton fx:id="mbAlunos" layoutX="325.0" layoutY="22.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="346.0" text="Selecione os alunos" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

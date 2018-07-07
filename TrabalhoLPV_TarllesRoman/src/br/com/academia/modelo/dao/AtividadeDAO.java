@@ -230,13 +230,11 @@ public class AtividadeDAO {
 		return atividades;
 	}
 
-	/**Encontra o maior valor, de acordo com os tipos recebidos por parâmetro, para o determinado aluno.
+	/**Encontra o maior valor, de acordo com o tipo recebido por parâmetro, para o determinado aluno.
 	 * 
 	 * ATENÇÃO¹: Para DataSet com valores médios será retornado o mesmo resultado do convencional ou máximo
-	 * ATENÇÃO²: Caso ocorra algum erro ao obter um valor o mesmo conterá uma chave "null" em sua respectiva posiçao
 	 * 
-	 * @return Um map de chave String e valor Atividade, onde a chave é uma breve descrição sobre o valor encontrado e a atividade
-	 * correspondente ao mesmo. As atividades serão inseridas no map, na mesma ordem em que foram recebidos os DataSetTypes
+	 * @return A atividade que corresponda a pesquisa ou null caso nenhuma seja encontrada
 	 */
 	public static Atividade selecionarMaiorValor(Connection con, Aluno aluno, DataSetTypes tipoValor){
 		String sql = "SELECT id, id_aluno, data, tempo, atividade, duracao, distancia, calorias, passos FROM public.atividade "
@@ -261,6 +259,105 @@ public class AtividadeDAO {
 			state.setString(2, valor);
 			state.setString(3, valor);
 			state.setInt(4, aluno.getId());
+
+			Atividade atividade = null;
+			ResultSet result = state.executeQuery();
+			if(result.next())
+				atividade = new Atividade(result.getInt(1), aluno,
+						result.getDate(3),result.getString(4),
+						result.getString(5), result.getDouble(6),result.getDouble(7),
+						result.getDouble(8), result.getInt(9));
+
+			state.close();
+
+			return atividade;
+
+		} catch (SQLException e) {
+			return null;
+		}
+	}
+	
+	/**Encontra o maior valor no intervalo, de acordo com o tipo recebido por parâmetro, para o determinado aluno.
+	 * 
+	 * ATENÇÃO¹: Para DataSet com valores médios será retornado o mesmo resultado do convencional ou máximo
+	 * 
+	 * @return A atividade que corresponda a pesquisa ou null caso nenhuma seja encontrada
+	 */
+	public static Atividade selecionarMaiorValor(Connection con, Aluno aluno,Date dataInicio, Date dataFim, DataSetTypes tipoValor){
+		String sql = "SELECT id, id_aluno, data, tempo, atividade, duracao, distancia, calorias, passos FROM public.atividade "
+				+ "WHERE id_aluno=? AND ?=(SELECT MAX(?) FROM public.atividade WHERE id_aluno=? AND data BETWEEN ? AND ?)";
+
+		String valor = "";
+
+		valor = obterValor(tipoValor);
+
+		if(valor.isEmpty()) {
+			return null;
+		}
+
+		if(tipoValor == DataSetTypes.VELOCIDADE_MAXIMA) {
+			return obterVelocidadeMaxima(aluno,con);
+		}
+
+		try {
+			PreparedStatement state = con.prepareStatement(sql);
+
+			state.setInt(1, aluno.getId());
+			state.setString(2, valor);
+			state.setString(3, valor);
+			state.setInt(4, aluno.getId());
+			state.setDate(5, dataInicio);
+			state.setDate(6, dataFim);
+
+			Atividade atividade = null;
+			ResultSet result = state.executeQuery();
+			if(result.next())
+				atividade = new Atividade(result.getInt(1), aluno,
+						result.getDate(3),result.getString(4),
+						result.getString(5), result.getDouble(6),result.getDouble(7),
+						result.getDouble(8), result.getInt(9));
+
+			state.close();
+
+			return atividade;
+
+		} catch (SQLException e) {
+			return null;
+		}
+	}
+	
+	/**Encontra o maior valor dessa modalidade de atividade no intervalo, de acordo com o tipo recebido por parâmetro, para o determinado aluno.
+	 * 
+	 * ATENÇÃO¹: Para DataSet com valores médios será retornado o mesmo resultado do convencional ou máximo
+	 * 
+	 * @return A atividade que corresponda a pesquisa ou null caso nenhuma seja encontrada
+	 */
+	public static Atividade selecionarMaiorValor(Connection con,String nomeAtividade, Aluno aluno,Date dataInicio, Date dataFim, DataSetTypes tipoValor){
+		String sql = "SELECT id, id_aluno, data, tempo, atividade, duracao, distancia, calorias, passos FROM public.atividade "
+				+ "WHERE id_aluno=? AND ?=(SELECT MAX(?) FROM public.atividade WHERE id_aluno=? AND atividade=? AND data BETWEEN ? AND ?)";
+
+		String valor = "";
+
+		valor = obterValor(tipoValor);
+
+		if(valor.isEmpty()) {
+			return null;
+		}
+
+		if(tipoValor == DataSetTypes.VELOCIDADE_MAXIMA) {
+			return obterVelocidadeMaxima(aluno,con);
+		}
+
+		try {
+			PreparedStatement state = con.prepareStatement(sql);
+
+			state.setInt(1, aluno.getId());
+			state.setString(2, valor);
+			state.setString(3, valor);
+			state.setInt(4, aluno.getId());
+			state.setString(5, nomeAtividade);
+			state.setDate(6, dataInicio);
+			state.setDate(7, dataFim);
 
 			Atividade atividade = null;
 			ResultSet result = state.executeQuery();

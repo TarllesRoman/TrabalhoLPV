@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.academia.Main;
 import br.com.academia.modelo.Atividade;
 import br.com.academia.modelo.AtividadeCompleta;
 import javafx.scene.chart.BarChart;
@@ -64,6 +65,40 @@ public class ChartFactory {
 
 		return grafico;
 	}
+	
+	/**Cria um gráfico com multiplas linhas, cada linha irá conter as atividades recebidas com retirados com os tipos de dataset recebidos, repectivamente*/
+	public static Chart createMultipleLineChart(String titulo,String nomeEixoX, String nomeEixoY, DataSetTypes[] tiposDataSets,  List<Atividade>[] listas) {
+		//Definindo os eixos
+		CategoryAxis eixoX = new CategoryAxis();
+		NumberAxis eixoY = new NumberAxis();
+		
+		eixoX.setLabel(nomeEixoY);
+		eixoY.setLabel(nomeEixoX);
+		
+		LineChart<String, Number> grafico = new LineChart<>(eixoX, eixoY);
+		
+		grafico.setTitle(titulo);
+		
+		grafico.setPrefSize(836, 384);
+		grafico.setMaxSize(836, 384);
+		
+		int i = 0;
+		XYChart.Series<String, Number> serieAux;
+		DataSetTypes dst;
+		
+		for(List<Atividade> la : listas) {
+			dst = tiposDataSets[i++];
+			serieAux = new XYChart.Series<>();
+			serieAux.setName(dst.getNome());
+			for(Atividade a : la) {
+				serieAux.getData().add(new Data<>(a.getAluno().getNome(),dst.getValorCorrespondente(a)));
+			}
+			
+			grafico.getData().add(serieAux);
+		}
+		
+		return grafico;
+	}
 
 	public static Chart createLineChart(List<Atividade> atividades, DataSetTypes tipoDataSet, String atividade) {
 
@@ -89,19 +124,17 @@ public class ChartFactory {
 
 		XYChart.Series<String, Number> serieAux;
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
 		//populando as séries com dados
 		for(Atividade atv : atividades) {
 			if( atividade != null && !atv.getAtividade().equals(atividade) ) continue;
 			if(series.containsKey(atv.getAtividade()))
 				((XYChart.Series<String, Number>)series.get(atv.getAtividade())).getData()
-				.add(new Data<>(sdf.format( atv.getData() ),
+				.add(new Data<>(Main.sdf.format( atv.getData() ),
 						tipoDataSet.getValorCorrespondente(atv)));
 			else {
 				serieAux = new XYChart.Series<>();
 				serieAux.setName(atv.getAtividade());
-				serieAux.getData().add(new Data<>(sdf.format( atv.getData() ),
+				serieAux.getData().add(new Data<>(Main.sdf.format( atv.getData() ),
 						tipoDataSet.getValorCorrespondente(atv)));
 				series.put(atv.getAtividade(), serieAux);
 			}

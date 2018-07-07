@@ -37,6 +37,11 @@
                 <MenuItem mnemonicParsing="false" onAction="#onactEditarUsuarios" text="Usuários" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Comparar">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#onactCompararAlunos" text="Alunos" />
+              </items>
+            </Menu>
             <Menu mnemonicParsing="false" text="Sair">
                <items>
                   <MenuItem mnemonicParsing="false" text="Sair" />

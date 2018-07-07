@@ -265,63 +265,26 @@ public class MainPanelController implements Initializable{
 
 	@FXML
 	private void onactEditarAluno() {
-		try {
-			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/EditarAluno.fxml"));
-			Scene scene = new Scene(root,440,406);
-			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
-
-			Stage stageEditAluno = new Stage();
-
-			stageEditAluno.setTitle(Main.TITULO + ": Editar Aluno");
-			stageEditAluno.centerOnScreen();
-			stageEditAluno.initModality(Modality.APPLICATION_MODAL);
-			stageEditAluno.setResizable(false);
-			stageEditAluno.setScene(scene);
-			stageEditAluno.showAndWait();
-
-			initialize(null, null);
-
-		} catch(Exception e) {	}
+		showModalView("/br/com/academia/view/EditarAluno.fxml", 440,406, ": Editar Aluno");
+		
+		initialize(null, null);
 	}
 
 	@FXML
 	private void onactEditarAtividade() {
-		try {
-			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/EditarAtividade.fxml"));
-			Scene scene = new Scene(root,669,386);
-			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
-
-			Stage stageEditAtividade = new Stage();
-
-			stageEditAtividade.setTitle(Main.TITULO + ": Editar Aluno");
-			stageEditAtividade.centerOnScreen();
-			stageEditAtividade.initModality(Modality.APPLICATION_MODAL);
-			stageEditAtividade.setResizable(false);
-			stageEditAtividade.setScene(scene);
-			stageEditAtividade.showAndWait();
-
-			initialize(null, null);
-
-		} catch(Exception e) {	}
+		showModalView("/br/com/academia/view/EditarAtividade.fxml", 669,386, ": Editar Atividade");
+		
+		initialize(null, null);
 	}
 
 	@FXML
 	private void onactEditarUsuarios() {
-		try {
-			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/EditarUsuario.fxml"));
-			Scene scene = new Scene(root,435,225);
-			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
+		showModalView("/br/com/academia/view/EditarUsuario.fxml", 435,225, ": Editar Usuários");
+	}
 
-			Stage stageEditUsuarios = new Stage();
-
-			stageEditUsuarios.setTitle(Main.TITULO + ": Editar Usuários");
-			stageEditUsuarios.centerOnScreen();
-			stageEditUsuarios.initModality(Modality.APPLICATION_MODAL);
-			stageEditUsuarios.setResizable(false);
-			stageEditUsuarios.setScene(scene);
-			stageEditUsuarios.showAndWait();
-
-		} catch(Exception e) {	}
+	@FXML
+	private void onactCompararAlunos() {
+		showModalView("/br/com/academia/view/CompararAlunos.fxml", 869, 545, ": CompararAlunos");
 	}
 
 	@FXML
@@ -372,6 +335,23 @@ public class MainPanelController implements Initializable{
 			stageDetalhes.setScene(scene);
 			stageDetalhes.showAndWait();
 
+		} catch(Exception e) {	}
+	}
+	
+	private void showModalView(String view, int width, int height, String subtitle) {
+		try {
+			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource(view));
+			Scene scene = new Scene(root,width,height);
+			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
+
+			Stage stageEditUsuarios = new Stage();
+
+			stageEditUsuarios.setTitle(Main.TITULO + subtitle);
+			stageEditUsuarios.centerOnScreen();
+			stageEditUsuarios.initModality(Modality.APPLICATION_MODAL);
+			stageEditUsuarios.setResizable(false);
+			stageEditUsuarios.setScene(scene);
+			stageEditUsuarios.showAndWait();
 		} catch(Exception e) {	}
 	}
 
