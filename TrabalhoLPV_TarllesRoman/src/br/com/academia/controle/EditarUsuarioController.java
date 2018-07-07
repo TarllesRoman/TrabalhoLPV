@@ -60,6 +60,7 @@ public class EditarUsuarioController implements Initializable {
     			usuarioCarregado.getPapel().equals(Main.usuario.getPapel())) {
     		
     		AlertHandler.showAlertErro(Main.TITULO, "Impossível atualizar usuário", "Você não pode realizar operações sobre si mesmo");
+    		return;
     	}
     	
     	try {
@@ -141,6 +142,7 @@ public class EditarUsuarioController implements Initializable {
     			usuarioCarregado.getPapel().equals(Main.usuario.getPapel())) {
     		
     		AlertHandler.showAlertErro(Main.TITULO, "Impossível excluir usuário", "Você não pode realizar operações sobre si mesmo");
+    		return;
     	}
     	
     	try {
