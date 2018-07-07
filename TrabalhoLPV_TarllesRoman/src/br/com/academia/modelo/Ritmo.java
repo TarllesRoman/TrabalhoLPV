@@ -1,5 +1,7 @@
 package br.com.academia.modelo;
 
+import br.com.academia.utils.HourHandle;
+
 public class Ritmo {
 	private int id;
 	private double km,
@@ -42,6 +44,13 @@ public class Ritmo {
 	public void setTempo(double tempo) {
 		this.tempo = tempo;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%.2f Km: %s", km, HourHandle.doubleMinutesToRitmo(tempo));
+	}
+	
+	
 	
 	
 }//class Ritmo

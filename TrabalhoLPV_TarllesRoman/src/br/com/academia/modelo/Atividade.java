@@ -2,6 +2,9 @@ package br.com.academia.modelo;
 
 import java.sql.Date;
 
+import br.com.academia.Main;
+import br.com.academia.utils.HourHandle;
+
 public class Atividade {
 	private int id;
 	private Aluno aluno;
@@ -96,7 +99,21 @@ public class Atividade {
 	public void setPassos(int passos) {
 		this.passos = passos;
 	}
-	
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("------ Detalhes do exercício ------");
+		sb.append("\nData: " + Main.sdf.format(data));
+		sb.append("\nTempo: "+tempo);
+		sb.append("\nDuração: "+HourHandle.doubleToMinutes(duracao));
+		sb.append("\nDistância: "+String.format("%.2f Km", distancia));
+		sb.append("\nCalorias Perdidas: "+String.format("%.2f Kcal", calorias));
+		sb.append("\nPassos: "+passos);
+		
+		return sb.toString();
+	}
 	
 	
 }//class Atividade

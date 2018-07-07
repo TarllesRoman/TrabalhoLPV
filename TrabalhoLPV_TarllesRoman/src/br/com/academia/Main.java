@@ -20,6 +20,7 @@ public class Main extends Application {
 	public static Connection conexao;
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	public static final String TITULO = "ACADEMIA JEDI";
+	public static final int ITENS_POR_PAGINA = 4;
 	
 	@Override
 	public void start(Stage primaryStage) {

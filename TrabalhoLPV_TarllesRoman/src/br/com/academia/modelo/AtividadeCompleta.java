@@ -3,6 +3,8 @@ package br.com.academia.modelo;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import br.com.academia.utils.HourHandle;
+
 public class AtividadeCompleta extends Atividade {
 	private int idCompleta;
 	private double velocidadeMedia, velocidadeMaxima, ritmoMedio,ritmoMaximo,
@@ -129,5 +131,28 @@ public class AtividadeCompleta extends Atividade {
 	public void setRitmos(ArrayList<Ritmo> ritmos) {
 		this.ritmos = ritmos;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(super.toString());
+		
+		sb.append("\nVelocidade média: "+String.format("%.2f Km/h", velocidadeMedia));
+		sb.append("\nVelocidade máxima: "+String.format("%.2f Km/h", velocidadeMaxima));
+		
+		sb.append("\nRitmo médio: "+String.format("%s /Km", HourHandle.doubleMinutesToRitmo(ritmoMedio)));
+		sb.append("\nRitmo máximo: "+String.format("%s /Km", HourHandle.doubleMinutesToRitmo(ritmoMaximo)));
+		
+		sb.append("\nMenor elevação: "+String.format("%.2f Km/h", menorElevacao));
+		sb.append("\nMaior elevação: "+String.format("%.2f Km/h", maiorElevacao));
+		
+		sb.append("\n\n------ Ritmos ------");
+		for(Ritmo r : ritmos)
+			sb.append("\n"+r.toString());
+		
+		return sb.toString();
+	}
+	
+	
 	
 }//class AtividadeCompleta

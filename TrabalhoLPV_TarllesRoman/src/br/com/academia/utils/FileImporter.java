@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,16 +39,45 @@ public class FileImporter {
 
 		return false;
 	}
-
-	private static Atividade importarAtividade(Aluno alunoImporatado, String conteudoArquivo) {
+	
+	public static boolean validarAtividade(String conteudoArquivo) {
 		Atividade atividade = new Atividade();
 		String aux;
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+			aux = obterRegex(SettingsKeys.REGEX_DATA_ATIVIDADE.getValue(), conteudoArquivo);
+			atividade.setData( new Date( Main.sdf.parse(aux.split(" ")[1]).getTime() ) );
+			
+			aux = obterRegex(SettingsKeys.REGEX_TEMPO_ATIVIDADE.getValue(), conteudoArquivo);
+			atividade.setTempo(aux.substring(aux.indexOf(" ") + 1));
+			
+			aux = obterRegex(SettingsKeys.REGEX_NAME_EXERCICIO.getValue(), conteudoArquivo);
+			atividade.setAtividade(aux.split(" ")[1]);
+			
+			aux = obterRegex(SettingsKeys.REGEX_DURACAO.getValue(), conteudoArquivo);
+			atividade.setDuracao( HourHandle.toDoubleMinutes(aux.split(" ")[1]+":00") );
+			
+			aux = obterRegex(SettingsKeys.REGEX_DISTANCIA.getValue(), conteudoArquivo);
+			atividade.setDistancia( Double.parseDouble(aux.split(" ")[1].replace(".", "").replace(",", ".")) );
+			
+			aux = obterRegex(SettingsKeys.REGEX_CALORIAS_PERDIDAS.getValue(), conteudoArquivo);
+			atividade.setCalorias(Double.parseDouble(aux.split(" ")[2].replace(".", "").replace(",", ".")));
+			
+			aux = obterRegex(SettingsKeys.REGEX_PASSOS.getValue(), conteudoArquivo);
+			atividade.setPassos( Integer.parseInt(aux.split(" ")[1].replace(".", "")) );
+		}catch(RuntimeException | ParseException e) {
+			return false;
+		}
+		return true;
+	}
+
+	public static Atividade importarAtividade(Aluno alunoImporatado, String conteudoArquivo) {
+		Atividade atividade = new Atividade();
+		String aux;
 		
 		try {
 			aux = obterRegex(SettingsKeys.REGEX_DATA_ATIVIDADE.getValue(), conteudoArquivo);
-			atividade.setData( new Date( sdf.parse(aux.split(" ")[1]).getTime() ) );
+			atividade.setData( new Date( Main.sdf.parse(aux.split(" ")[1]).getTime() ) );
 			
 			aux = obterRegex(SettingsKeys.REGEX_TEMPO_ATIVIDADE.getValue(), conteudoArquivo);
 			atividade.setTempo(aux.substring(aux.indexOf(" ") + 1));
@@ -81,54 +109,53 @@ public class FileImporter {
 			
 			try {
 				aux = obterRegex(SettingsKeys.REGEX_VELOCIDADE_MEDIA.getValue(), conteudoArquivo);
-				atividadeCompleta.setVelocidadeMedia(Double.parseDouble(aux.split(" ")[1].replace(".", "").replace(",", ".")));
+				atividadeCompleta.setVelocidadeMedia(Double.parseDouble(aux.split(" ")[2].replace(".", "").replace(",", ".")));
 				isCompleta = true;
-			}catch(RuntimeException e) {	}
+			}catch(RuntimeException e) {}
 			
 			try {
 				aux = obterRegex(SettingsKeys.REGEX_VELOCIDADE_MAXIMA.getValue(), conteudoArquivo);
-				atividadeCompleta.setVelocidadeMaxima(Double.parseDouble(aux.split(" ")[1].replace(".", "").replace(",", ".")));
+				atividadeCompleta.setVelocidadeMaxima(Double.parseDouble(aux.split(" ")[2].replace(".", "").replace(",", ".")));
 				isCompleta = true;
-			}catch(RuntimeException e) {	}
+			}catch(RuntimeException e) {}
 			
 			try {
 				aux = obterRegex(SettingsKeys.REGEX_RITMO_MEDIO.getValue(), conteudoArquivo);
-				atividadeCompleta.setRitmoMedio(HourHandle.ritmoToDoubleMinutes(aux.split(" ")[1]));
+				atividadeCompleta.setRitmoMedio(HourHandle.ritmoToDoubleMinutes(aux.split(" ")[2]));
 				isCompleta = true;
-			}catch(RuntimeException e) {	}
+			}catch(RuntimeException e) {}
 			
 			try {
 				aux = obterRegex(SettingsKeys.REGEX_RITMO_MAXIMO.getValue(), conteudoArquivo);
-				atividadeCompleta.setRitmoMaximo(HourHandle.ritmoToDoubleMinutes(aux.split(" ")[1]));
+				atividadeCompleta.setRitmoMaximo(HourHandle.ritmoToDoubleMinutes(aux.split(" ")[2]));
 				isCompleta = true;
-			}catch(RuntimeException e) {	}
+			}catch(RuntimeException e) {}
 			
 			try {
 				aux = obterRegex(SettingsKeys.REGEX_MENOR_ELEVACAO.getValue(), conteudoArquivo);
 				atividadeCompleta.setMenorElevacao( 
-						Double.parseDouble( aux.split(" ")[1].replace(".","").replace(",", ".") )
+						Double.parseDouble( aux.split(" ")[2].replace(".","").replace(",", ".") )
 						);
 				isCompleta = true;
-			}catch(RuntimeException e) {	}
+			}catch(RuntimeException e) {}
 			
 			try {
 				aux = obterRegex(SettingsKeys.REGEX_MAIOR_ELEVACAO.getValue(), conteudoArquivo);
 				atividadeCompleta.setMaiorElevacao( 
-						Double.parseDouble( aux.split(" ")[1].replace(".","").replace(",", ".") )
+						Double.parseDouble( aux.split(" ")[2].replace(".","").replace(",", ".") )
 						);
 				isCompleta = true;
-			}catch(RuntimeException e) {	}
+			}catch(RuntimeException e) {}
 			
 			if(isCompleta) {
 				AtividadeCompletaDAO.inserirApenas(atividadeCompleta, Main.conexao);
 				atividade = atividadeCompleta;
 			}
-			
 			importarRitmos(atividadeCompleta,conteudoArquivo);
 			
 			return atividade;
 			
-		}catch (SQLException | ParseException e) {
+		}catch (SQLException | ParseException | RuntimeException e) {
 			return null;
 		}
 	}
@@ -137,11 +164,10 @@ public class FileImporter {
 		Matcher matcher = Pattern.compile(SettingsKeys.REGEX_RITMOS.getValue()).matcher(conteudoArquivo);
 		
 		Ritmo ritmo;
-		int km = 1;
 		String aux;
 		while(matcher.find()) {
 			aux = matcher.group();
-			ritmo = new Ritmo(km++,HourHandle.ritmoToDoubleMinutes(aux.split(" ")[1]));
+			ritmo = new Ritmo(Double.parseDouble( aux.split(" ")[0].replace(",", ".") ), HourHandle.ritmoToDoubleMinutes(aux.split(" ")[2]));
 			atividadeCompleta.getRitmos().add( ritmo );
 		}
 		
@@ -154,8 +180,6 @@ public class FileImporter {
 	private static Aluno importarAluno(String conteudoArquivo) {
 		Aluno aluno;
 		String aux;
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 		try {
 			aux = obterRegex(SettingsKeys.REGEX_EMAIL.getValue(), conteudoArquivo);
@@ -168,7 +192,7 @@ public class FileImporter {
 				aluno = new Aluno();
 			
 			aux = obterRegex(SettingsKeys.REGEX_DATA_NASCIMENTO.getValue(), conteudoArquivo);
-			aluno.setDataNascimento( new Date(sdf.parse(aux.split(" ")[3]).getTime() ) );
+			aluno.setDataNascimento( new Date(Main.sdf.parse(aux.split(" ")[3]).getTime() ) );
 
 			aux = obterRegex(SettingsKeys.REGEX_NAME_ALUNO.getValue(), conteudoArquivo);
 			aluno.setNome(aux.substring(aux.indexOf(" ") + 1));
@@ -192,7 +216,7 @@ public class FileImporter {
 
 			return AlunoDAO.selecionar(Main.conexao, email);
 
-		} catch (SQLException | ParseException e) {
+		} catch (SQLException | ParseException | RuntimeException e) {
 			return null;
 		}
 	}

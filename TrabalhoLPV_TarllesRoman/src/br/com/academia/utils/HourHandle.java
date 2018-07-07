@@ -13,7 +13,7 @@ import java.util.Date;
  * 
  * @author Tarlles Roman
  *
- * @version 1.0
+ * @version 1.1
  */
 public class HourHandle {
 	public static final String SEPARADOR = ":";
@@ -34,6 +34,16 @@ public class HourHandle {
 		minutes += Double.parseDouble("0."+ss);
 		
 		return fitDoubleMinutes(minutes);
+	}
+	
+	/**Converte o horario passado por parâmetro em seu equivalente em minutos
+	 * 
+	 * @param horario String no formato hh:mm:ss
+	 * 
+	 * @return um double representando os minutos que estao na hr do parâmetro
+	 */
+	public static String doubleToMinutes(Double horario) {
+		return String.format("%02d:%02d:%02d", horario.intValue()/60, horario.intValue()%60, Integer.parseInt(horario.toString().split("\\.")[1]) );
 	}
 	
 	/**Verifica se os minutos representados em double estão corretos. Os minutos estarão incorretos quando
@@ -103,6 +113,17 @@ public class HourHandle {
 		minutes += Double.parseDouble("0."+ss);
 		
 		return fitDoubleMinutes(minutes);
+	}
+	
+	/**Converte o ritmo passado por parâmetro em seu equivalente em double
+	 * 
+	 * @param ritmo {@link String} no formato mm'ss"
+	 * 
+	 * @return um double representando os minutos que estao na hr do parâmetro
+	 */
+	public static String doubleMinutesToRitmo(Double doubleMinutes) {
+		String str[] = doubleMinutes.toString().split("\\.");
+		return String.format("%02d'%02d\"", Integer.parseInt(str[0]),Integer.parseInt(str[1]));
 	}
 	
 	/**Obtém a hora do sistema operacional

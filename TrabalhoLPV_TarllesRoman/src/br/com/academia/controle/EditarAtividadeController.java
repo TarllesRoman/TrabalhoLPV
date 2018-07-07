@@ -15,8 +15,10 @@ import br.com.academia.modelo.dao.AlunoDAO;
 import br.com.academia.modelo.dao.AtividadeDAO;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Pagination;
@@ -24,6 +26,11 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class EditarAtividadeController implements Initializable{
 
@@ -39,8 +46,10 @@ public class EditarAtividadeController implements Initializable{
 
 	@FXML private TableView<Atividade> tbvAtividades;
 
-	List<Atividade> atividades;
-	List<Aluno> alunos;
+	private List<Atividade> atividades;
+	private List<Aluno> alunos;
+	
+	static Atividade atvSelecionada;
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -126,6 +135,33 @@ public class EditarAtividadeController implements Initializable{
 			carregarAluno();
 		}
 	}
+	
+	@FXML
+	private void requestAtividade(MouseEvent event) {
+		if(tbvAtividades.getSelectionModel().getSelectedIndex() < 0) return;
+		
+		if( !event.getButton().equals(MouseButton.PRIMARY) || event.getClickCount() != 2) return;
+		
+		int index = tbvAtividades.getSelectionModel().getSelectedIndex() + (Main.ITENS_POR_PAGINA * pgTabela.getCurrentPageIndex());
+		atvSelecionada = atividades.get(index);
+		
+		try {
+			AnchorPane root = (AnchorPane)FXMLLoader.load(getClass().getResource("/br/com/academia/view/AtividadeUD.fxml"));
+			Scene scene = new Scene(root,318,420);
+			scene.getStylesheets().add(getClass().getResource("/br/com/academia/view/DefaultCSS.css").toExternalForm());
+			
+			Stage stageEditAluno = new Stage();
+			
+			stageEditAluno.setTitle(Main.TITULO + ": Editar Aluno");
+			stageEditAluno.centerOnScreen();
+			stageEditAluno.initModality(Modality.APPLICATION_MODAL);
+			stageEditAluno.setResizable(false);
+			stageEditAluno.setScene(scene);
+			stageEditAluno.showAndWait();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	private void carregarAluno() {
 		try {
@@ -143,7 +179,7 @@ public class EditarAtividadeController implements Initializable{
 		
 			pgTabela.setPageCount( (atividades.size()%4 > 0)? (atividades.size()/4+1) : atividades.size()/4 );
 			pgTabela.setPageFactory(this::createPage);
-		} catch (SQLException | ParseException e) {	}
+		} catch (SQLException | ParseException | IndexOutOfBoundsException e) {	}
 	}
 	
 	private void carregarAtividade() {
@@ -183,4 +219,4 @@ public class EditarAtividadeController implements Initializable{
 		return tbvAtividades;
 	}
 
-}
+}//class EditarAtividadeController

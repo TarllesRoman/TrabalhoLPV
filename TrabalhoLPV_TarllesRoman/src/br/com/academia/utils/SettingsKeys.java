@@ -25,13 +25,13 @@ public enum SettingsKeys {
 	REGEX_DISTANCIA("Distância: ([0-9|\\.]+),([0-9]+) Km"),
 	REGEX_CALORIAS_PERDIDAS("Calorias perdidas: ([0-9|\\.]+) Kcal"),
 	REGEX_PASSOS("Passos: ([0-9]|\\.)+"),
-	REGEX_VELOCIDADE_MEDIA("Velocidade média: [0-9]+,[0-9]+"),
-	REGEX_VELOCIDADE_MAXIMA("Velocidade máxima: [0-9]+,[0-9]+"),
-	REGEX_MENOR_ELEVACAO("Menor elevação: ([0-9]|\\.)+"),
-	REGEX_MAIOR_ELEVACAO("Maior elevação: ([0-9]|\\.)+"),
-	REGEX_RITMOS("Km: [0-9]+['|’][0-9]+[\"|”]"),
-	REGEX_RITMO_MEDIO("Ritmo médio: [0-9]{2}['|’][0-9]{2}[\"|”]"),
-	REGEX_RITMO_MAXIMO("Ritmo máximo: [0-9]{2}['|’][0-9]{2}[\"|”]");
+	REGEX_VELOCIDADE_MEDIA("Velocidade média: [0-9]+,[0-9]+ Km/h"),
+	REGEX_VELOCIDADE_MAXIMA("Velocidade máxima: [0-9]+,[0-9]+ Km/h"),
+	REGEX_MENOR_ELEVACAO("Menor elevação: ([0-9]|\\.)+ m"),
+	REGEX_MAIOR_ELEVACAO("Maior elevação: ([0-9]|\\.)+ m"),
+	REGEX_RITMOS("[0-9|,]+ Km: [0-9]+['|’][0-9]+[\"|”]"),
+	REGEX_RITMO_MEDIO("Ritmo médio: [0-9]{2}['|’][0-9]{2}[\"|”] /Km"),
+	REGEX_RITMO_MAXIMO("Ritmo máximo: [0-9]{2}['|’][0-9]{2}[\"|”] /Km");
 	
 	private String value;
 

@@ -39,6 +39,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
@@ -137,7 +139,14 @@ public class MainPanelController implements Initializable{
 	}
 
 	@FXML
-	private void requestAtividade() {
+	private void requestAtividade(MouseEvent event) {
+		if(tbvAtividades.getSelectionModel().getSelectedIndex() < 0) return;
+		
+		if( !event.getButton().equals(MouseButton.PRIMARY) || event.getClickCount() != 2) return;
+		
+		int index = tbvAtividades.getSelectionModel().getSelectedIndex() + (Main.ITENS_POR_PAGINA * pgTabela.getCurrentPageIndex());
+		Atividade atvSelecionada = atividades.get(index);
+		
 		AlertHandler.showAlertConfirm("", "", "Funcionou?");
 	}
 	
@@ -168,9 +177,7 @@ public class MainPanelController implements Initializable{
 
 			paneGrafico.getChildren().add(chart);
 			
-		}catch(SQLException | ParseException e) {
-			e.printStackTrace();
-		}
+		}catch(SQLException | ParseException | NullPointerException e) {	}
 	}
 
 	/**Acao do menu item importar, exibe um filechooser e importa os arquivos escolhidos*/
@@ -260,8 +267,8 @@ public class MainPanelController implements Initializable{
 	}
 	
 	private Node createPage(int pageIndex) {
-		int from = pageIndex * 4,
-			to = Math.min(from + 4, atividades.size());
+		int from = pageIndex * Main.ITENS_POR_PAGINA,
+			to = Math.min(from + Main.ITENS_POR_PAGINA, atividades.size());
 		
 		tbvAtividades.setItems(FXCollections.observableArrayList(atividades.subList(from, to)));
 		

@@ -42,9 +42,9 @@ public class AtividadeCompletaDAO {
 	 *  Também busca e carrega, na atividade retornada, os ritmos referentes
 	 * @throws SQLException */
 	public static AtividadeCompleta selecionar(Atividade atividade, Connection con) throws SQLException {
+		try {
 		String sql = "SELECT id, velocidade_media, velocidade_maxima, ritmo_medio,"
-					 + " ritmo_maximo, menor_elevacao, maior_elevacao"
-				     + " FROM public.atividade_completa WHERE id_atividade=?";
+				+ " ritmo_maximo, menor_elevacao, maior_elevacao FROM public.atividade_completa WHERE id_atividade=?";
 		
 		PreparedStatement state = con.prepareStatement(sql);
 		
@@ -69,8 +69,12 @@ public class AtividadeCompletaDAO {
 			return atvCompleta;
 		}
 		
-		state.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		return null;
+		
 	}
 	
 }//class AtividadeCompletaDAO
