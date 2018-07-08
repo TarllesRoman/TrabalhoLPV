@@ -84,6 +84,7 @@ public class EditarAlunoController implements Initializable {
 
 			String strDate = Main.sdf.format( alunoCarregado.getDataNascimento() );
 			dpNascimento.setValue(new LocalDateStringConverter().fromString(strDate) );
+			dpNascimento.getEditor().setText(strDate);
 
 			tfEmail.setText(alunoCarregado.getEmail());
 		}catch(Exception e) {}
