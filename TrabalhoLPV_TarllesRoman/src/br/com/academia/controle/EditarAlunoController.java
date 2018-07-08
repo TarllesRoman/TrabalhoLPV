@@ -130,6 +130,7 @@ public class EditarAlunoController implements Initializable {
 	@FXML
 	private void onactBuscar(ActionEvent event) {
 		try {
+			limpar();
 			alunoCarregado = alunos.get(autoCompleteStrings.indexOf(tfNome.getText()));
 
 			carregarAluno();
@@ -172,8 +173,8 @@ public class EditarAlunoController implements Initializable {
 	private void limpar() {
 		tfNome.setText("");
 		tfSexo.setText("");
-		tfPeso.setText( "" );
-		tfAltura.setText( "" );
+		tfPeso.setText("");
+		tfAltura.setText("");
 		tfCPF.setText("");
 		tfWPP.setText("");
 		dpNascimento.getEditor().setText("");
